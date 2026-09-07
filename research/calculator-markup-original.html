@@ -1,0 +1,106 @@
+							<div class="elementor-shortcode"><style>.omega-kalk-container{--ok-accent:#4f46e5;}</style><div class="omega-kalk-container">
+    <main class="ok-main">
+        <h2 class="ok-title">Kalkulator usług księgowych</h2>
+
+        <form id="omega-kalk-form" class="ok-card" novalidate>
+            <div class="ok-grid">
+                <label class="ok-field">
+                    <span>Forma działalności</span>
+                    <select id="omega-kalk-forma">
+                        <option value="JDG">JDG</option>
+                        <option value="SPOLKA_ZOO">Spółka z o.o.</option>
+                    </select>
+                    <small class="ok-hint" id="omega-kalk-forma-hint"></small>
+                </label>
+
+                <label class="ok-field">
+                    <span>Rodzaj księgowości</span>
+                    <select id="omega-kalk-rodzaj">
+                        <option value="RYCZALT">Ryczałt</option>
+                        <option value="KPIR">KPiR</option>
+                        <option value="PELNA">Pełna księgowość</option>
+                    </select>
+                    <small class="ok-hint" id="omega-kalk-rodzaj-hint"></small>
+                </label>
+
+                <label class="ok-field">
+                    <span>Liczba dokumentów / miesiąc</span>
+                    <input id="omega-kalk-dokumenty" type="number" min="0" step="1" value="0" placeholder="np. 30" />
+                </label>
+
+                <label class="ok-field">
+                    <span>Pracownicy na umowę o pracę</span>
+                    <input id="omega-kalk-pracUop" type="number" min="0" step="1" value="0" placeholder="np. 2" />
+                </label>
+
+                <label class="ok-field">
+                    <span>Pracownicy na zlecenie</span>
+                    <input id="omega-kalk-pracUoz" type="number" min="0" step="1" value="0" placeholder="np. 1" />
+                </label>
+            </div>
+
+            <fieldset class="ok-fieldset">
+                <legend>Dodatkowe warunki</legend>
+                <label class="ok-checkbox">
+                    <input id="omega-kalk-vat" type="checkbox" />
+                    <span>Czy jest w rejestrze VAT?</span>
+                </label>
+                <label class="ok-checkbox">
+                    <input id="omega-kalk-eksport" type="checkbox" />
+                    <span>Czy robi eksport/import?</span>
+                </label>
+            </fieldset>
+
+            <div class="ok-grid" style="margin-top:12px;">
+                <label class="ok-field-plain">
+                    <span>Imię</span>
+                    <input id="omega-kalk-imie" type="text" placeholder="np. Anna" />
+                </label>
+
+                <label class="ok-field-plain">
+                    <span>Telefon</span>
+                    <input id="omega-kalk-telefon" type="tel" placeholder="np. 622233123" />
+                    <small class="ok-hint">Wpisz min. 9 cyfr</small>
+                </label>
+
+                <label class="ok-field-plain">
+                    <span>E-mail</span>
+                    <input id="omega-kalk-email" type="email" placeholder="np. anna@example.com" />
+                </label>
+            </div>
+
+            <label class="ok-checkbox" style="margin-top:12px;">
+                <input id="omega-kalk-privacy" type="checkbox" required aria-required="true" />
+                <span>
+                    Zapoznałem/-am się z <a href="https://omega-mg.pl/polityka-prywatnosci/" target="_blank" rel="noopener">Polityką prywatności</a> i wyrażam zgodę na przetwarzanie moich danych osobowych w celu przygotowania wyceny oraz kontaktu zwrotnego.                </span>
+            </label>
+
+            <input type="text" id="omega-kalk-hp" name="hp_field" value="" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" />
+
+            <div class="ok-actions">
+                <button type="button" id="omega-kalk-oblicz" class="ok-btn ok-btn-primary">Oblicz</button>
+                <button type="reset" class="ok-btn ok-btn-secondary">Wyczyść</button>
+            </div>
+
+            <div id="omega-kalk-status" class="ok-hint" style="margin-top:8px;"></div>
+        </form>
+
+        <section id="omega-kalk-wynik" class="ok-result ok-card ok-hidden">
+            <h3>Wynik</h3>
+            <div id="omega-kalk-kwota" class="ok-price">—</div>
+            <div id="omega-kalk-breakdown" class="ok-breakdown"></div>
+        </section>
+    </main>
+
+    <div class="pp-rodo" style="font-size:13px;line-height:1.5;color:#777;max-width:640px;margin:12px auto 0;">
+        <strong>Informacja o przetwarzaniu danych:</strong>
+        Administratorem danych jest Omega MG Monika Glonek, ul. Heleny i Jana Prześlaków 15C, 43-600 Jaworzno,
+        e-mail: <a href="/cdn-cgi/l/email-protection#1d7f74686f725d7270787a7c30707a336d71"><span class="__cf_email__" data-cfemail="0d6f64787f624d6260686a6c20606a237d61">[email&#160;protected]</span></a>.
+        Dane podane w formularzu przetwarzamy wyłącznie w celu przygotowania orientacyjnej wyceny
+        i kontaktu zwrotnego (art. 6 ust. 1 lit. f RODO). Podanie danych jest dobrowolne.
+        Masz prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania
+        oraz wniesienia skargi do Prezesa UODO. Szczegóły w
+        <a href="https://omega-mg.pl/polityka-prywatnosci/">Polityce prywatności</a>.
+    </div>
+</div>
+

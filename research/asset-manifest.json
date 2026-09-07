@@ -1,0 +1,694 @@
+{
+  "source": "https://omega-mg.pl/",
+  "retrievedAt": "2026-09-07T22:22:53.613Z",
+  "assets": [
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2.png",
+      "local": "public/assets/projekt-bez-nazwy-2.png",
+      "webPath": "/assets/projekt-bez-nazwy-2.png",
+      "bytes": 83283,
+      "sha256": "81e4c359914b1ec41d33fb6f1d4e233d7acd9f26ed0936a7dbc66f362cc40720",
+      "width": 1080,
+      "height": 1080,
+      "imageElements": [
+        {
+          "width": "1080",
+          "height": "1080",
+          "src": "https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2.png",
+          "class": "attachment-full size-full wp-image-1800",
+          "alt": "",
+          "srcset": "https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2.png 1080w, https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-300x300.png 300w, https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-1024x1024.png 1024w, https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-150x150.png 150w, https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-768x768.png 768w",
+          "sizes": "(max-width: 1080px) 100vw, 1080px"
+        }
+      ],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-1024x1024.png",
+      "local": "public/assets/projekt-bez-nazwy-2-1024x1024.png",
+      "webPath": "/assets/projekt-bez-nazwy-2-1024x1024.png",
+      "bytes": 109356,
+      "sha256": "9343cf60c3c49a196a025894e30e087944e251e75ed02b0516b69b9acce10dcb",
+      "width": 1024,
+      "height": 1024,
+      "imageElements": [
+        {
+          "fetchpriority": "high",
+          "decoding": "async",
+          "width": "1024",
+          "height": "1024",
+          "src": "https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-1024x1024.png",
+          "class": "attachment-large size-large wp-image-1800",
+          "alt": "",
+          "srcset": "https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-1024x1024.png 1024w, https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-300x300.png 300w, https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-150x150.png 150w, https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-768x768.png 768w, https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2.png 1080w",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        }
+      ],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/aktualne-cropped.svg",
+      "local": "public/assets/aktualne-cropped.svg",
+      "webPath": "/assets/aktualne-cropped.svg",
+      "bytes": 17813,
+      "sha256": "d56de9875ed11370fdf103eeab1375775689468b995c42e8d7f32c976de1712f",
+      "width": 159.82,
+      "height": 154.62,
+      "viewBox": "38.54 68.61 159.82 154.62",
+      "imageElements": [
+        {
+          "src": "https://omega-mg.pl/wp-content/uploads/2025/08/aktualne-cropped.svg",
+          "class": "custom-logo",
+          "alt": "Monika Glonek",
+          "decoding": "async"
+        },
+        {
+          "src": "https://omega-mg.pl/wp-content/uploads/2025/08/aktualne-cropped.svg",
+          "class": "custom-logo",
+          "alt": "Monika Glonek",
+          "decoding": "async"
+        }
+      ],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/cropped-projekt-bez-nazwy-32x32.png",
+      "local": "public/assets/cropped-projekt-bez-nazwy-32x32.png",
+      "webPath": "/assets/cropped-projekt-bez-nazwy-32x32.png",
+      "bytes": 1224,
+      "sha256": "f6e72dfe3c0b45fb1f4243f1c73aa96d0738eea3429b6ea62176c9d627777e16",
+      "width": 32,
+      "height": 32,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/cropped-projekt-bez-nazwy-192x192.png",
+      "local": "public/assets/cropped-projekt-bez-nazwy-192x192.png",
+      "webPath": "/assets/cropped-projekt-bez-nazwy-192x192.png",
+      "bytes": 18707,
+      "sha256": "76497324e246e6d5640fb98706ac4939987543f9ea7954a6ba644afa299a3e9d",
+      "width": 192,
+      "height": 192,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/cropped-projekt-bez-nazwy-180x180.png",
+      "local": "public/assets/cropped-projekt-bez-nazwy-180x180.png",
+      "webPath": "/assets/cropped-projekt-bez-nazwy-180x180.png",
+      "bytes": 16677,
+      "sha256": "23204748f3641530a547088c0abd61a834c98a9bc3a7f13a6705aa9f1e61efed",
+      "width": 180,
+      "height": 180,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/cropped-projekt-bez-nazwy-270x270.png",
+      "local": "public/assets/cropped-projekt-bez-nazwy-270x270.png",
+      "webPath": "/assets/cropped-projekt-bez-nazwy-270x270.png",
+      "bytes": 31278,
+      "sha256": "3213955931e8c6061caedc8fdff4b33e05cf51075c479647f4ff6d4e38d3c78d",
+      "width": 270,
+      "height": 270,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-300x300.png",
+      "local": "public/assets/projekt-bez-nazwy-2-300x300.png",
+      "webPath": "/assets/projekt-bez-nazwy-2-300x300.png",
+      "bytes": 20401,
+      "sha256": "2ba5c827a042918750477e63065bc026447f2fee4cd08fce9cee20ebd987bbe5",
+      "width": 300,
+      "height": 300,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-150x150.png",
+      "local": "public/assets/projekt-bez-nazwy-2-150x150.png",
+      "webPath": "/assets/projekt-bez-nazwy-2-150x150.png",
+      "bytes": 8760,
+      "sha256": "c3c7b2f8282de05f0b509803886437091e0c529a3ba8f17e7b0a05501425cece",
+      "width": 150,
+      "height": 150,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/projekt-bez-nazwy-2-768x768.png",
+      "local": "public/assets/projekt-bez-nazwy-2-768x768.png",
+      "webPath": "/assets/projekt-bez-nazwy-2-768x768.png",
+      "bytes": 72381,
+      "sha256": "73dbd0293fa79f71a0a0754b970d2f93a4b065d403707c6ff52ace5e939b1026",
+      "width": 768,
+      "height": 768,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-scaled.jpg",
+      "local": "public/assets/dsc_1052-scaled.jpg",
+      "webPath": "/assets/dsc_1052-scaled.jpg",
+      "bytes": 243965,
+      "sha256": "70df176d151df23cf252dfb582ae50e6b99718ce3006582f3d9d49ffb56dda17",
+      "width": 2560,
+      "height": 1709,
+      "imageElements": [
+        {
+          "decoding": "async",
+          "width": "2560",
+          "height": "1709",
+          "src": "https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-scaled.jpg",
+          "class": "attachment-full size-full wp-image-1619",
+          "alt": "",
+          "srcset": "https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-scaled.jpg 2560w, https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-300x200.jpg 300w, https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-1024x684.jpg 1024w, https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-768x513.jpg 768w, https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-1536x1025.jpg 1536w, https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-2048x1367.jpg 2048w",
+          "sizes": "(max-width: 2560px) 100vw, 2560px"
+        }
+      ],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-300x200.jpg",
+      "local": "public/assets/dsc_1052-300x200.jpg",
+      "webPath": "/assets/dsc_1052-300x200.jpg",
+      "bytes": 9471,
+      "sha256": "118413f34fc16a72a15da44301bb20cd99a0efe8fd55ff1940d036b5f50a2766",
+      "width": 300,
+      "height": 200,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-1024x684.jpg",
+      "local": "public/assets/dsc_1052-1024x684.jpg",
+      "webPath": "/assets/dsc_1052-1024x684.jpg",
+      "bytes": 54771,
+      "sha256": "55130973a9e76ef2bddfb340f41df0e7e6c470e3e064faf81008611b81a19c6a",
+      "width": 1024,
+      "height": 684,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-768x513.jpg",
+      "local": "public/assets/dsc_1052-768x513.jpg",
+      "webPath": "/assets/dsc_1052-768x513.jpg",
+      "bytes": 36149,
+      "sha256": "72fe9e40a305c5b91a888cd43014d3d7c661dc3721cf89cef1cc7ffe2fa87a75",
+      "width": 768,
+      "height": 513,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-1536x1025.jpg",
+      "local": "public/assets/dsc_1052-1536x1025.jpg",
+      "webPath": "/assets/dsc_1052-1536x1025.jpg",
+      "bytes": 101861,
+      "sha256": "5df8031fb2c7eeee9a6ed309a40677512c7d918e8189dba4f4c5941ad0d7fcfe",
+      "width": 1536,
+      "height": 1025,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-2048x1367.jpg",
+      "local": "public/assets/dsc_1052-2048x1367.jpg",
+      "webPath": "/assets/dsc_1052-2048x1367.jpg",
+      "bytes": 162662,
+      "sha256": "4d69e39f363482a44a27d7fc646eb81cde50a71307e721f357c31fed1d559092",
+      "width": 2048,
+      "height": 1367,
+      "imageElements": [],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2020/07/crop-woman-using-calculator-and-taking-notes-on-paper.jpg",
+      "local": "public/assets/crop-woman-using-calculator-and-taking-notes-on-paper.jpg",
+      "webPath": "/assets/crop-woman-using-calculator-and-taking-notes-on-paper.jpg",
+      "bytes": 34828,
+      "sha256": "cbef79164479487e331b3a2813dd57ef5a7a100ca0a257d2e536cbeac9b4505d",
+      "width": 640,
+      "height": 426,
+      "imageElements": [
+        {
+          "decoding": "async",
+          "width": "640",
+          "height": "426",
+          "src": "https://omega-mg.pl/wp-content/uploads/2020/07/crop-woman-using-calculator-and-taking-notes-on-paper.jpg",
+          "class": "attachment-full size-full wp-image-505",
+          "alt": "crop woman using calculator and taking notes on paper"
+        }
+      ],
+      "cssBackgrounds": [
+        {
+          "source": "https://omega-mg.pl/wp-content/uploads/2020/07/crop-woman-using-calculator-and-taking-notes-on-paper.jpg",
+          "stylesheet": "research/styles/17-elementor-post-127-css.css"
+        }
+      ]
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2020/07/crop-payroll-clerk-counting-money-while-sitting-at-table.jpg",
+      "local": "public/assets/crop-payroll-clerk-counting-money-while-sitting-at-table.jpg",
+      "webPath": "/assets/crop-payroll-clerk-counting-money-while-sitting-at-table.jpg",
+      "bytes": 26280,
+      "sha256": "ceaf7a2b55cde563b690fd8daa4487b918dd696471ddb244fe70792cf66e0b3e",
+      "width": 640,
+      "height": 426,
+      "imageElements": [
+        {
+          "loading": "lazy",
+          "decoding": "async",
+          "width": "640",
+          "height": "426",
+          "src": "https://omega-mg.pl/wp-content/uploads/2020/07/crop-payroll-clerk-counting-money-while-sitting-at-table.jpg",
+          "class": "attachment-full size-full wp-image-504",
+          "alt": "crop payroll clerk counting money while sitting at table"
+        }
+      ],
+      "cssBackgrounds": [
+        {
+          "source": "https://omega-mg.pl/wp-content/uploads/2020/07/crop-payroll-clerk-counting-money-while-sitting-at-table.jpg",
+          "stylesheet": "research/styles/17-elementor-post-127-css.css"
+        }
+      ]
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2021/07/logo-5.svg",
+      "local": "public/assets/logo-5.svg",
+      "webPath": "/assets/logo-5.svg",
+      "bytes": 3207,
+      "sha256": "78634f5ae50a8452d0c50e9f26fbd35a6f5f1e72e4ce07d153e597f58e8936af",
+      "width": 144,
+      "height": 80,
+      "viewBox": "0 0 144 80",
+      "imageElements": [
+        {
+          "decoding": "async",
+          "class": "swiper-slide-image",
+          "src": "https://omega-mg.pl/wp-content/uploads/2021/07/logo-5.svg",
+          "alt": "logo 5"
+        }
+      ],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2021/07/logo-4.svg",
+      "local": "public/assets/logo-4.svg",
+      "webPath": "/assets/logo-4.svg",
+      "bytes": 6174,
+      "sha256": "0f4d9b9e992e47a86d8e574f44aacfd965d329bc30f890e31e7296ecbeee9258",
+      "width": 143,
+      "height": 80,
+      "viewBox": "0 0 143 80",
+      "imageElements": [
+        {
+          "decoding": "async",
+          "class": "swiper-slide-image",
+          "src": "https://omega-mg.pl/wp-content/uploads/2021/07/logo-4.svg",
+          "alt": "logo 4"
+        }
+      ],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2021/07/logo-3.svg",
+      "local": "public/assets/logo-3.svg",
+      "webPath": "/assets/logo-3.svg",
+      "bytes": 6642,
+      "sha256": "476b881cb5693095d63b46d925e1624595a3332143a9b692f41711d939a23cca",
+      "width": 143,
+      "height": 80,
+      "viewBox": "0 0 143 80",
+      "imageElements": [
+        {
+          "decoding": "async",
+          "class": "swiper-slide-image",
+          "src": "https://omega-mg.pl/wp-content/uploads/2021/07/logo-3.svg",
+          "alt": "logo 3"
+        }
+      ],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2021/07/logo-2.svg",
+      "local": "public/assets/logo-2.svg",
+      "webPath": "/assets/logo-2.svg",
+      "bytes": 8303,
+      "sha256": "4d3b527eb8a2d74faa579e691e1bbc79c933375de8be60785d6a50d34c8438b2",
+      "width": 143,
+      "height": 80,
+      "viewBox": "0 0 143 80",
+      "imageElements": [
+        {
+          "decoding": "async",
+          "class": "swiper-slide-image",
+          "src": "https://omega-mg.pl/wp-content/uploads/2021/07/logo-2.svg",
+          "alt": "logo 2"
+        }
+      ],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2021/07/logo-1.svg",
+      "local": "public/assets/logo-1.svg",
+      "webPath": "/assets/logo-1.svg",
+      "bytes": 10657,
+      "sha256": "53a521cb3992e7f6c8a338bdf7de989cf76ec74f043939306555098b0e4a8012",
+      "width": 143,
+      "height": 80,
+      "viewBox": "0 0 143 80",
+      "imageElements": [
+        {
+          "decoding": "async",
+          "class": "swiper-slide-image",
+          "src": "https://omega-mg.pl/wp-content/uploads/2021/07/logo-1.svg",
+          "alt": "logo 1"
+        }
+      ],
+      "cssBackgrounds": []
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2020/07/grad-white-curve-bg.svg",
+      "local": "public/assets/grad-white-curve-bg.svg",
+      "webPath": "/assets/grad-white-curve-bg.svg",
+      "bytes": 1023,
+      "sha256": "dbe28cce1dd4f29afa9e016ee1ac65213435212c1d99efb915702570b17c5ad4",
+      "width": 100,
+      "height": 100,
+      "viewBox": "0 0 1024 600",
+      "imageElements": [],
+      "cssBackgrounds": [
+        {
+          "source": "https://omega-mg.pl/wp-content/uploads/2020/07/grad-white-curve-bg.svg",
+          "stylesheet": "research/styles/17-elementor-post-127-css.css"
+        },
+        {
+          "source": "https://omega-mg.pl/wp-content/uploads/2020/07/grad-white-curve-bg.svg",
+          "stylesheet": "research/styles/17-elementor-post-127-css.css"
+        }
+      ]
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2020/07/bg-blob-blue.svg",
+      "local": "public/assets/bg-blob-blue.svg",
+      "webPath": "/assets/bg-blob-blue.svg",
+      "bytes": 1026,
+      "sha256": "c3f67e85f57d66fa1864951381319c368a1270f5a300f6b219df5d1d0a637aad",
+      "width": 100,
+      "height": 100,
+      "viewBox": "0 0 200 200",
+      "imageElements": [],
+      "cssBackgrounds": [
+        {
+          "source": "https://omega-mg.pl/wp-content/uploads/2020/07/bg-blob-blue.svg",
+          "stylesheet": "research/styles/17-elementor-post-127-css.css"
+        }
+      ]
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2020/07/heap-of-american-money-cash-and-vintage-light-box.jpg",
+      "local": "public/assets/heap-of-american-money-cash-and-vintage-light-box.jpg",
+      "webPath": "/assets/heap-of-american-money-cash-and-vintage-light-box.jpg",
+      "bytes": 50140,
+      "sha256": "cdb4ab0b2d2eede5c14fd951a14d1cff9c6a58bf560d165163796706f76747bf",
+      "width": 640,
+      "height": 426,
+      "imageElements": [],
+      "cssBackgrounds": [
+        {
+          "source": "https://omega-mg.pl/wp-content/uploads/2020/07/heap-of-american-money-cash-and-vintage-light-box.jpg",
+          "stylesheet": "research/styles/17-elementor-post-127-css.css"
+        }
+      ]
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/2018/08/bg-01-free-img.jpg",
+      "local": "public/assets/bg-01-free-img.jpg",
+      "webPath": "/assets/bg-01-free-img.jpg",
+      "bytes": 33855,
+      "sha256": "1034028b377e3a4e25be096d0ed4028ba931d72ae93a65e38f56fd73d9c5f00d",
+      "width": 1920,
+      "height": 1080,
+      "imageElements": [],
+      "cssBackgrounds": [
+        {
+          "source": "https://omega-mg.pl/wp-content/uploads/2018/08/bg-01-free-img.jpg",
+          "stylesheet": "research/styles/17-elementor-post-127-css.css"
+        }
+      ]
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.svg?5.53.0#eicon",
+      "local": "public/assets/eicons.svg",
+      "webPath": "/assets/eicons.svg",
+      "bytes": 372159,
+      "sha256": "ec7403feacf5d8a9d3934e66252c2b2d0c0b5f319e4b46de02a8803c1f0aad5d",
+      "imageElements": [],
+      "cssBackgrounds": [
+        {
+          "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.svg?5.53.0#eicon",
+          "stylesheet": "research/styles/19-hfe-elementor-icons-css.css"
+        }
+      ]
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/font-awesome/webfonts/fa-brands-400.svg#fontawesome",
+      "local": "public/assets/fa-brands-400.svg",
+      "webPath": "/assets/fa-brands-400.svg",
+      "bytes": 749223,
+      "sha256": "5accc59868cdb3e81386c2f325823e8a82ce3b553912e2d43fb9abb4cd5a1e94",
+      "imageElements": [],
+      "cssBackgrounds": [
+        {
+          "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/font-awesome/webfonts/fa-brands-400.svg#fontawesome",
+          "stylesheet": "research/styles/22-hfe-social-share-icons-brands-css.css"
+        }
+      ]
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/font-awesome/webfonts/fa-solid-900.svg#fontawesome",
+      "local": "public/assets/fa-solid-900.svg",
+      "webPath": "/assets/fa-solid-900.svg",
+      "bytes": 918991,
+      "sha256": "fa498fb2596a5235c5c86d7b68a7fbe76e9855c01af4b0e5ab41c41047c648e0",
+      "imageElements": [],
+      "cssBackgrounds": [
+        {
+          "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/font-awesome/webfonts/fa-solid-900.svg#fontawesome",
+          "stylesheet": "research/styles/24-hfe-nav-menu-icons-css.css"
+        }
+      ]
+    },
+    {
+      "source": "https://www.cik.org.pl/widget.js?id=28162&mobile=left&desktop=right",
+      "embeddedSource": "data:image/png;base64,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",
+      "local": "public/assets/cik-widget-logo.png",
+      "webPath": "/assets/cik-widget-logo.png",
+      "bytes": 1987,
+      "sha256": "5cf21954ed5727ed3fb57d344ec3656751bb1dc8b8128758ffd4516a948f6a61",
+      "width": 50,
+      "height": 50
+    }
+  ],
+  "fonts": [
+    {
+      "source": "https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.ttf",
+      "local": "public/assets/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.ttf",
+      "webPath": "/assets/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.ttf",
+      "bytes": 35316,
+      "sha256": "d8f99fb48842f2a6b113cb9934e41bde592193380396bf352aa85d634e77ce9f"
+    },
+    {
+      "source": "https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsgH1x4gaVc.ttf",
+      "local": "public/assets/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsgH1x4gaVc.ttf",
+      "webPath": "/assets/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsgH1x4gaVc.ttf",
+      "bytes": 35296,
+      "sha256": "b041fef8e9aa6703e030f419cbc66322e00624ce708cd1279ee7487275a0517a"
+    },
+    {
+      "source": "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlEA.ttf",
+      "local": "public/assets/pxiByp8kv8JHgFVrLCz7Z1xlEA.ttf",
+      "webPath": "/assets/pxiByp8kv8JHgFVrLCz7Z1xlEA.ttf",
+      "bytes": 15816,
+      "sha256": "884d2cd5ba1b567924c3d174d5cb03f9ad49777bd3c4aa97ce01567acdcdf587"
+    },
+    {
+      "source": "https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrFJA.ttf",
+      "local": "public/assets/pxiEyp8kv8JHgFVrFJA.ttf",
+      "webPath": "/assets/pxiEyp8kv8JHgFVrFJA.ttf",
+      "bytes": 154628,
+      "sha256": "cdedb1729acac414ed01744a11da7badb86adf13108e7bd3fa161b9323f7fe54"
+    },
+    {
+      "source": "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLGT9V1s.ttf",
+      "local": "public/assets/pxiByp8kv8JHgFVrLGT9V1s.ttf",
+      "webPath": "/assets/pxiByp8kv8JHgFVrLGT9V1s.ttf",
+      "bytes": 152860,
+      "sha256": "fcff04f4bec2b3636f05ed894dc1f9a752c4cb587ee49857ec7a82abaf6ca016"
+    },
+    {
+      "source": "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLEj6V1s.ttf",
+      "local": "public/assets/pxiByp8kv8JHgFVrLEj6V1s.ttf",
+      "webPath": "/assets/pxiByp8kv8JHgFVrLEj6V1s.ttf",
+      "bytes": 151516,
+      "sha256": "dae40ca7b35fe7501bda2e4140a6860b1db47330be5d3c8ab6971fd83a70e9a5"
+    },
+    {
+      "source": "https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7V1s.ttf",
+      "local": "public/assets/pxiByp8kv8JHgFVrLCz7V1s.ttf",
+      "webPath": "/assets/pxiByp8kv8JHgFVrLCz7V1s.ttf",
+      "bytes": 150292,
+      "sha256": "1984efdda0fbe207d7ac20feac2ba7c2768c92a90094b02a206c9d58cc30ff2e"
+    },
+    {
+      "source": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTSGmu1aB.woff2",
+      "local": "public/assets/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTSGmu1aB.woff2",
+      "webPath": "/assets/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTSGmu1aB.woff2",
+      "bytes": 35156,
+      "sha256": "d5bab8e28732fe3d10dcef4f77b9c248605bbb2a87d289a2539251ceafab536a",
+      "family": "Open Sans",
+      "subset": "latin-ext",
+      "note": "Official WOFF2 variant of original font family; Latin Extended adds missing Polish glyphs."
+    },
+    {
+      "source": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+      "local": "public/assets/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+      "webPath": "/assets/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+      "bytes": 48320,
+      "sha256": "d8e4fe0452aa2076429a9bb5d8757d00a994dd95986cf950e9a1a371b9a072a0",
+      "family": "Open Sans",
+      "subset": "latin",
+      "note": "Official WOFF2 variant of original font family; Latin Extended adds missing Polish glyphs."
+    }
+  ],
+  "stylesheets": [
+    {
+      "source": "https://omega-mg.pl/wp-content/themes/astra/assets/css/minified/main.min.css?ver=4.13.2",
+      "local": "research/styles/01-astra-theme-css-css.css"
+    },
+    {
+      "source": "https://fonts.googleapis.com/css?family=Open+Sans:400%2C600|Poppins:700%2C&display=swap&ver=4.13.2",
+      "local": "research/styles/02-astra-google-fonts-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/header-footer-elementor/inc/widgets-css/frontend.css?ver=2.9.4",
+      "local": "research/styles/03-hfe-widgets-style-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/header-footer-elementor/assets/css/header-footer-elementor.css?ver=2.9.4",
+      "local": "research/styles/04-hfe-style-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=4.2.4",
+      "local": "research/styles/05-elementor-frontend-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/elementor/css/post-333.css?ver=1788251974",
+      "local": "research/styles/06-elementor-post-333-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/widget-heading.min.css?ver=4.2.4",
+      "local": "research/styles/07-widget-heading-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/widget-divider.min.css?ver=4.2.4",
+      "local": "research/styles/08-widget-divider-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/widget-image.min.css?ver=4.2.4",
+      "local": "research/styles/09-widget-image-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/widget-icon-list.min.css?ver=4.2.4",
+      "local": "research/styles/10-widget-icon-list-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/animations/styles/e-animation-grow.min.css?ver=4.2.4",
+      "local": "research/styles/11-e-animation-grow-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/widget-icon-box.min.css?ver=4.2.4",
+      "local": "research/styles/12-widget-icon-box-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/swiper/v8/css/swiper.min.css?ver=8.4.5",
+      "local": "research/styles/13-swiper-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/conditionals/e-swiper.min.css?ver=4.2.4",
+      "local": "research/styles/14-e-swiper-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/widget-image-carousel.min.css?ver=4.2.4",
+      "local": "research/styles/15-widget-image-carousel-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/animations/styles/e-animation-pulse.min.css?ver=4.2.4",
+      "local": "research/styles/16-e-animation-pulse-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/elementor/css/post-127.css?ver=1788251974",
+      "local": "research/styles/17-elementor-post-127-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/elementor/css/post-479.css?ver=1788251974",
+      "local": "research/styles/18-elementor-post-479-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/eicons/css/elementor-icons.min.css?ver=5.34.0",
+      "local": "research/styles/19-hfe-elementor-icons-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/widget-icon-list.min.css?ver=3.24.3",
+      "local": "research/styles/20-hfe-icons-list-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/widget-social-icons.min.css?ver=3.24.0",
+      "local": "research/styles/21-hfe-social-icons-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.css?ver=5.15.3",
+      "local": "research/styles/22-hfe-social-share-icons-brands-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.css?ver=5.15.3",
+      "local": "research/styles/23-hfe-social-share-icons-fontawesome-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.css?ver=5.15.3",
+      "local": "research/styles/24-hfe-nav-menu-icons-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/elementor/google-fonts/css/roboto.css?ver=1753130812",
+      "local": "research/styles/25-elementor-gf-local-roboto-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/uploads/elementor/google-fonts/css/robotoslab.css?ver=1753130814",
+      "local": "research/styles/26-elementor-gf-local-robotoslab-css.css"
+    },
+    {
+      "source": "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap",
+      "local": "research/styles/27-omega-kalk-fonts-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/omega-kalkulator/public/css/calculator.css?ver=1.0.3",
+      "local": "research/styles/28-omega-kalk-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/widget-social-icons.min.css?ver=4.2.4",
+      "local": "research/styles/29-widget-social-icons-css.css"
+    },
+    {
+      "source": "https://omega-mg.pl/wp-content/plugins/elementor/assets/css/conditionals/apple-webkit.min.css?ver=4.2.4",
+      "local": "research/styles/30-e-apple-webkit-css.css"
+    },
+    {
+      "source": "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap",
+      "local": "research/styles/31-open-sans-polish.css"
+    }
+  ]
+}
