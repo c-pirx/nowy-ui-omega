@@ -153,7 +153,7 @@
                   <span
                     >Zapoznałem/-am się z
                     <a
-                      href="https://omega-mg.pl/polityka-prywatnosci/"
+                      href="<?php echo esc_url( get_privacy_policy_url() ?: 'https://omega-mg.pl/polityka-prywatnosci/' ); ?>"
                       target="_blank"
                       rel="noopener"
                       >Polityką prywatności</a
@@ -334,7 +334,7 @@
                   /><span
                     >Zapoznałem/-am się z
                     <a
-                      href="https://omega-mg.pl/polityka-prywatnosci/"
+                      href="<?php echo esc_url( get_privacy_policy_url() ?: 'https://omega-mg.pl/polityka-prywatnosci/' ); ?>"
                       target="_blank"
                       rel="noopener"
                       >Polityką prywatności</a
@@ -395,7 +395,7 @@
                   prawo dostępu do danych, ich sprostowania, usunięcia,
                   ograniczenia przetwarzania oraz wniesienia skargi do Prezesa
                   UODO. Szczegóły w
-                  <a href="https://omega-mg.pl/polityka-prywatnosci/"
+                  <a href="<?php echo esc_url( get_privacy_policy_url() ?: 'https://omega-mg.pl/polityka-prywatnosci/' ); ?>"
                     >Polityce prywatności</a
                   >.
                 </p>

@@ -17,9 +17,14 @@ const mainStart = body.indexOf('<main id="content">');
 const mainEnd = body.indexOf("</main>", mainStart) + "</main>".length;
 if (mainStart < 0 || mainEnd < 0) throw new Error("Nie znaleziono głównej treści.");
 
+// Polityka prywatności: strona WordPressa po jej publikacji, do tego czasu obecna strona omega-mg.pl.
+const privacyHref = `href="<?php echo esc_url( get_privacy_policy_url() ?: 'https://omega-mg.pl/polityka-prywatnosci/' ); ?>"`;
+const privacyPattern = /href="https:\/\/omega-mg\.pl\/polityka-prywatnosci\/"/g;
+
 function rewriteMarkup(value) {
   return value
     .replace(/<script\b[^>]*\bsrc=["'](?:\.\/)?app\.js["'][^>]*>\s*<\/script>/gi, "")
+    .replace(privacyPattern, privacyHref)
     .replace(/\b(src|poster)=["'](?:\.\/)?assets\/([^"']+)["']/g, (_m, attr, path) =>
       `${attr}="<?php echo esc_url( get_theme_file_uri( '/assets/${path}' ) ); ?>"`)
     .replace(/\bsrcset="([^"]+)"/g, (_m, set) => {
@@ -49,7 +54,8 @@ const headerMarkup = rewriteMarkup(body.slice(0, mainStart))
 let mainMarkup = body.slice(mainStart, mainEnd);
 const calculatorPattern = /<section\s+class="section calculator-section"[\s\S]*?<\/section>/i;
 const calculatorMarkup = mainMarkup.match(calculatorPattern)?.[0]
-  ?.replace('class="section calculator-section"', 'class="section calculator-section omega-calculator"');
+  ?.replace('class="section calculator-section"', 'class="section calculator-section omega-calculator"')
+  .replace(privacyPattern, privacyHref);
 if (!calculatorMarkup) throw new Error("Nie znaleziono sekcji kalkulatora.");
 mainMarkup = rewriteMarkup(mainMarkup.replace(calculatorPattern, `<?php
 if ( shortcode_exists( 'omega_calculator' ) ) {
@@ -58,7 +64,9 @@ if ( shortcode_exists( 'omega_calculator' ) ) {
 \techo '<section class="section calculator-section" id="kalkulator"><div class="container"><p>Kalkulator jest chwilowo niedostępny.</p></div></section>';
 }
 ?>`));
-const footerMarkup = rewriteMarkup(body.slice(mainEnd));
+// Stopka dostaje kolumnę ze stronami sklepu (koszyk, konto, zwroty), których statyczna strona nie ma.
+const footerMarkup = rewriteMarkup(body.slice(mainEnd))
+  .replace(/(<div>\s*<h3>Kontakt<\/h3>)/, "<?php omega_footer_shop(); ?>\n          $1");
 
 const headerPhp = `<?php defined( 'ABSPATH' ) || exit; ?>
 <!doctype html>
@@ -256,6 +264,23 @@ function omega_cart_live_count() {
 \t<?php
 }
 add_action( 'wp_footer', 'omega_cart_live_count', 100 );
+
+// Kolumna „Sklep” w stopce: strony WooCommerce, a zwroty i regulamin dopiero po ich opublikowaniu.
+function omega_footer_shop() {
+\tif ( ! function_exists( 'wc_get_page_permalink' ) ) return;
+\t$links = array(
+\t\t'Sklep'      => wc_get_page_permalink( 'shop' ),
+\t\t'Koszyk'     => wc_get_cart_url(),
+\t\t'Moje konto' => wc_get_page_permalink( 'myaccount' ),
+\t);
+\tforeach ( array( 'refund_returns', 'terms' ) as $page ) {
+\t\t$id = wc_get_page_id( $page );
+\t\tif ( $id > 0 && 'publish' === get_post_status( $id ) ) $links[ get_the_title( $id ) ] = get_permalink( $id );
+\t}
+\techo '<div class="footer-shop"><h3>Sklep</h3><ul>';
+\tforeach ( $links as $label => $url ) echo '<li><a href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a></li>';
+\techo '</ul></div>';
+}
 
 // Strzałka zamykająca każdy przycisk i link tekstowy, ta sama co w statycznym markupie.
 function omega_arrow() {
@@ -597,6 +622,9 @@ await writeFile(join(theme, "assets", "css", "site.css"), css
 .header-cart-actions .text-link { min-height: 40px; gap: 12px; font-size: 13px; }
 @media (max-width: 1023px) { .header-inner > .header-cart { display: inline-flex; margin-left: -6px; } .header-cart-panel { display: none; } }
 .entry-content > * + * { margin-top: 1.25em; }
+.footer-grid:has(.footer-shop) { grid-template-columns: 1.6fr 1fr 1fr 1fr; }
+@media (max-width: 1023px) { .footer-grid:has(.footer-shop) { grid-template-columns: 1.2fr 1fr; } .footer-grid:has(.footer-shop) .footer-brand { grid-row: 1 / 4; } }
+@media (max-width: 767px) { .footer-grid:has(.footer-shop) { grid-template-columns: 1fr; } .footer-grid:has(.footer-shop) .footer-brand { grid-row: auto; } }
 `);
 await writeFile(join(theme, "assets", "js", "main.js"), mainJs);
 await cp(join(root, "public", "navigation.js"), join(theme, "assets", "js", "navigation.js"));

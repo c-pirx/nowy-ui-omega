@@ -27,6 +27,11 @@ test("WordPress theme is native, self-contained and keeps the approved sections"
   assert.match(functions, /header-cart-panel/);
   assert.match(functions, /render_block_woocommerce\/empty-cart-block/);
   assert.match(footer, /wp_footer\(\)/);
+  // Stopka: kolumna sklepu i polityka prywatności ze strony WordPressa po jej publikacji.
+  assert.match(footer, /omega_footer_shop\(\)/);
+  assert.match(functions, /function omega_footer_shop/);
+  assert.doesNotMatch(front + header + footer, /href="https:\/\/omega-mg\.pl\/polityka-prywatnosci\/"/);
+  assert.match(footer, /get_privacy_policy_url\(\)/);
   assert.doesNotMatch(main, /initCalculator|calculator\.js/);
   assert.match(main, /if \(logos && prev && next\)/);
   // Baza wiedzy: lista w index.php, artykuł w single.php, style tylko na tych stronach.

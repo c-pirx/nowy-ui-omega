@@ -2675,3 +2675,6 @@ button:disabled {
 .header-cart-actions .text-link { min-height: 40px; gap: 12px; font-size: 13px; }
 @media (max-width: 1023px) { .header-inner > .header-cart { display: inline-flex; margin-left: -6px; } .header-cart-panel { display: none; } }
 .entry-content > * + * { margin-top: 1.25em; }
+.footer-grid:has(.footer-shop) { grid-template-columns: 1.6fr 1fr 1fr 1fr; }
+@media (max-width: 1023px) { .footer-grid:has(.footer-shop) { grid-template-columns: 1.2fr 1fr; } .footer-grid:has(.footer-shop) .footer-brand { grid-row: 1 / 4; } }
+@media (max-width: 767px) { .footer-grid:has(.footer-shop) { grid-template-columns: 1fr; } .footer-grid:has(.footer-shop) .footer-brand { grid-row: auto; } }

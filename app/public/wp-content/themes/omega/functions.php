@@ -177,6 +177,23 @@ function omega_cart_live_count() {
 }
 add_action( 'wp_footer', 'omega_cart_live_count', 100 );
 
+// Kolumna „Sklep” w stopce: strony WooCommerce, a zwroty i regulamin dopiero po ich opublikowaniu.
+function omega_footer_shop() {
+	if ( ! function_exists( 'wc_get_page_permalink' ) ) return;
+	$links = array(
+		'Sklep'      => wc_get_page_permalink( 'shop' ),
+		'Koszyk'     => wc_get_cart_url(),
+		'Moje konto' => wc_get_page_permalink( 'myaccount' ),
+	);
+	foreach ( array( 'refund_returns', 'terms' ) as $page ) {
+		$id = wc_get_page_id( $page );
+		if ( $id > 0 && 'publish' === get_post_status( $id ) ) $links[ get_the_title( $id ) ] = get_permalink( $id );
+	}
+	echo '<div class="footer-shop"><h3>Sklep</h3><ul>';
+	foreach ( $links as $label => $url ) echo '<li><a href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a></li>';
+	echo '</ul></div>';
+}
+
 // Strzałka zamykająca każdy przycisk i link tekstowy, ta sama co w statycznym markupie.
 function omega_arrow() {
 	return '<span aria-hidden="true"><svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14" /></svg></span>';

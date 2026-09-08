@@ -30,6 +30,7 @@
               <li><a href="<?php echo esc_url( home_url( '/#oferta' ) ); ?>">Rozliczenia podatkowe</a></li>
             </ul>
           </div>
+          <?php omega_footer_shop(); ?>
           <div>
             <h3>Kontakt</h3>
             <ul>
@@ -49,7 +50,7 @@
             NIP: 6321808677 <span>REGON: 243006460</span
             ><span>Certyfikat Księgowy nr 54701/2012</span>
           </p>
-          <a href="https://omega-mg.pl/polityka-prywatnosci/"
+          <a href="<?php echo esc_url( get_privacy_policy_url() ?: 'https://omega-mg.pl/polityka-prywatnosci/' ); ?>"
             >Polityka prywatności
             <span aria-hidden="true"
               ><svg
