@@ -18,6 +18,19 @@ npm test
 npm run package:wordpress
 ```
 
+## Lokalne środowisko WordPress
+
+W LocalWP jako ścieżkę witryny ustaw katalog repozytorium:
+`S:\21agency\omega-test`. LocalWP utworzy w nim `app/`, `conf/` i
+`logs/`, a pliki WordPressa umieści w `app/public/`. Te ścieżki nie
+kolidują z katalogiem `public/`, który nadal zawiera statyczny frontend
+publikowany przez GitHub Pages.
+
+Własny motyw rozwijamy w
+`app/public/wp-content/themes/omega-mg/`. Git śledzi wyłącznie ten motyw;
+rdzeń WordPressa, baza danych, konfiguracja środowiska, media oraz cudze
+wtyczki i motywy pozostają lokalne.
+
 ## Pliki
 
 - `public/index.html` — wszystkie sekcje i źródłowe treści.

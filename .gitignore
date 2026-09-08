@@ -1,3 +1,19 @@
 node_modules/
 dist/
 .tmp/
+
+# LocalWP tworzy te katalogi w korzeniu repozytorium.
+# Rdzeń WordPressa, baza, konfiguracja, logi, wtyczki i media są lokalne.
+/conf/
+/logs/
+/app/*
+!/app/public/
+/app/public/*
+!/app/public/wp-content/
+/app/public/wp-content/*
+
+# Wersjonujemy wyłącznie własny motyw.
+!/app/public/wp-content/themes/
+/app/public/wp-content/themes/*
+!/app/public/wp-content/themes/omega-mg/
+!/app/public/wp-content/themes/omega-mg/**
