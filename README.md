@@ -13,6 +13,7 @@ npm run dev
 Podgląd: <http://localhost:4173>. Serwer jest dostępny wyłącznie lokalnie.
 
 ```sh
+npm ci
 npm test
 npm run package:wordpress
 ```
@@ -33,9 +34,13 @@ npm run package:wordpress
 
 Wtyczka jest domyślnie wyłączona. Zmienia wyłącznie szablon strony głównej po włączeniu opcji w **Ustawienia → Omega MG — redesign**. Nie zmienia treści w bazie, Astry, Elementora, polityki prywatności ani backendu kalkulatora. Dezaktywacja przywraca oryginalny widok.
 
-Na WordPressie stawki, nonce i adres AJAX pochodzą z aktualnej konfiguracji istniejącej wtyczki `omega-kalkulator`. Zachowany jest oryginalny mechanizm: obliczenie po wypełnieniu wymaganych danych i zgody wysyła zapytanie do biura. Bez bieżącej konfiguracji formularz informuje o niedostępności; nie deklaruje wysłania wiadomości.
+Kalkulator najpierw anonimowo pokazuje orientacyjną cenę w formacie **„od 650 zł netto/mies.”** (kwota zależy od danych, stawki nie zostały zmienione). Obliczenie nie wysyła żądania. Przycisk **„Wyślij wynik do potwierdzenia”** otwiera formularz: imię, telefon, e-mail i opcjonalna wiadomość do 3000 znaków, wraz z dotychczasową zgodą. **„Zmień dane”** przywraca parametry do edycji. Dopiero zatwierdzenie formularza wysyła wynik, jego parametry i wiadomość.
 
-Na `localhost` i `127.0.0.1` kalkulator oblicza wycenę ze źródłowych stawek, ale **nigdy nie wysyła zapytania**. Wynik jasno informuje o trybie podglądu. Lokalny katalog nie zawiera instalacji WordPressa ani źródeł prywatnego backendu; rzeczywiste dostarczenie e-maila wymaga testu na kopii działającej witryny.
+Na WordPressie stawki, nonce i adres AJAX pochodzą z aktualnej konfiguracji istniejącej wtyczki `omega-kalkulator`. Jej endpoint nadal odpowiada za walidację i wysyłkę. Adapter dopisuje wiadomość i orientacyjne podsumowanie do e-maila przez filtr `wp_mail`, wyłącznie dla nowych zgłoszeń oznaczonych przez ten formularz. Bez aktualnej konfiguracji lub adaptera wysyłka informuje o niedostępności.
+
+Na `localhost`, `127.0.0.1` oraz statycznym GitHub Pages bez konfiguracji WordPressa kalkulator oblicza wycenę ze źródłowych stawek, ale **nigdy nie wysyła zapytania**. Próba zatwierdzenia formularza jasno informuje o trybie podglądu. Lokalny katalog nie zawiera instalacji WordPressa ani źródeł prywatnego backendu; rzeczywiste dostarczenie e-maila wraz z wiadomością wymaga testu na kopii działającej witryny.
+
+Strzałki na całej stronie są ikonami SVG z kolorem `currentColor`, więc nie zmieniają się w emoji na urządzeniach mobilnych. Zależność `jsdom` służy wyłącznie testom formularza; frontend i pakowanie WordPressa nie wymagają bibliotek runtime.
 
 Treść nowego widoku znajduje się w pliku HTML. Późniejsze zmiany tekstów w Elementorze nie synchronizują się automatycznie z tym szablonem. Dane C.I.K. zachowują treść odczytanego widgetu; panel zawiera odnośnik do aktualnego certyfikatu.
 

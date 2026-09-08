@@ -89,27 +89,6 @@ export function calculateQuote(values, rules = ORIGINAL_RULES) {
   };
 }
 
-const MESSAGES = {
-  privacy_required:
-    "Aby skorzystać z kalkulatora, zaakceptuj politykę prywatności.",
-  name_required: "Podaj imię.",
-  phone_required: "Telefon powinien zawierać przynajmniej 9 cyfr.",
-  email_required: "Podaj poprawny adres e-mail.",
-  sending: "Wysyłam zgłoszenie…",
-  success:
-    "Dziękujemy! Wysłaliśmy zapytanie do biura. Skontaktujemy się wkrótce.",
-  error_send:
-    "Nie udało się wysłać wiadomości. Spróbuj ponownie lub skontaktuj się telefonicznie.",
-  error_network: "Błąd połączenia przy wysyłce. Spróbuj ponownie później.",
-  error_timeout:
-    "Przekroczono czas oczekiwania na odpowiedź. Nie mamy potwierdzenia wysyłki. Skontaktuj się z biurem telefonicznie.",
-  hint_spolka: "Dla spółki z o.o. dostępna jest wyłącznie pełna księgowość.",
-  disclaimer:
-    "Szacowana wycena, w celu uzgodnienia szczegółów prosimy o kontakt.",
-};
-
-const PREVIEW_MESSAGE =
-  "Podgląd: wycena została obliczona. Zapytanie nie zostało wysłane.";
 const CONFIG_ERROR =
   "Kalkulator jest chwilowo niedostępny. Skontaktuj się z biurem pod numerem +48 505 448 081.";
 const formatPLN = new Intl.NumberFormat("pl-PL", {
@@ -119,83 +98,65 @@ const formatPLN = new Intl.NumberFormat("pl-PL", {
 });
 
 export function initCalculator() {
-  const form = document.getElementById("omega-kalk-form");
-  if (!form || form.dataset.calculatorInitialized) return null;
-  form.dataset.calculatorInitialized = "true";
-  form.noValidate = true;
   const field = (suffix) => document.getElementById(`omega-kalk-${suffix}`);
-  const button = field("oblicz");
-  const result = field("result") || field("wynik");
+  const form = field("form");
+  if (!form || form.dataset.calculatorInitialized) return null;
+  const contact = field("contact");
+  const result = field("result");
   const status = field("status");
-  const requiredFields = [
-    "forma",
-    "rodzaj",
-    "dokumenty",
-    "pracUop",
-    "pracUoz",
-    "vat",
-    "eksport",
-    "imie",
-    "telefon",
-    "email",
-    "privacy",
-    "hp",
-  ];
+  const contactStatus = field("contact-status");
+  const send = field("send");
+  const confirm = field("confirm");
+  const edit = field("edit");
   if (
-    !button ||
+    !contact ||
     !result ||
     !status ||
-    requiredFields.some((name) => !field(name))
-  ) {
-    if (status) status.textContent = CONFIG_ERROR;
+    !contactStatus ||
+    !send ||
+    !confirm ||
+    !edit
+  )
     return null;
-  }
-
-  status.setAttribute("role", "status");
-  status.setAttribute("aria-live", "polite");
-  result.setAttribute("aria-live", "polite");
-  const isPreview =
-    location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  form.dataset.calculatorInitialized = "true";
   const config = () => window.OmegaKalkData || {};
-  const message = (key) => config().i18n?.[key] || MESSAGES[key];
-  const initialButtonNodes = [...button.childNodes];
+  const isLocal =
+    location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  const numericFields = ["dokumenty", "pracUop", "pracUoz"];
+  const contactFields = ["imie", "telefon", "email", "wiadomosc", "privacy"];
+  const initialSendNodes = [...send.childNodes];
   const defaultSelectValue = (select) =>
     [...select.options].find((option) => option.defaultSelected)?.value ||
     select.options[0]?.value;
   const defaultForma = defaultSelectValue(field("forma"));
   const defaultRodzaj = defaultSelectValue(field("rodzaj"));
-  const numericFields = ["dokumenty", "pracUop", "pracUoz"];
-  const validatedFields = [
-    "privacy",
-    "imie",
-    "telefon",
-    "email",
-    ...numericFields,
-  ];
+  let quote = null;
   let busy = false;
-  let revision = 0;
+  let sent = false;
 
   function setStatus(text, state = "") {
-    status.textContent = text;
-    status.dataset.state = state;
+    for (const region of [status, contactStatus]) {
+      region.textContent = "";
+      region.dataset.state = "";
+    }
+    const region = contact.hidden ? status : contactStatus;
+    region.textContent = text;
+    region.dataset.state = state;
   }
 
   function setError(suffix, text) {
     const input = field(suffix);
-    const error = form.querySelector(`[data-error-for="${input.id}"]`);
+    const error = document.querySelector(`[data-error-for="${input.id}"]`);
     input.setAttribute("aria-invalid", text ? "true" : "false");
-    if (error) {
-      error.textContent = text;
-      error.hidden = !text;
-      if (!error.id) error.id = `${input.id}-error`;
-      const descriptions = new Set(
-        (input.getAttribute("aria-describedby") || "")
-          .split(" ")
-          .filter(Boolean),
-      );
-      descriptions.add(error.id);
-      input.setAttribute("aria-describedby", [...descriptions].join(" "));
-    }
+    if (!error) return;
+    error.textContent = text;
+    error.hidden = !text;
+    error.id ||= `${input.id}-error`;
+    const descriptions = new Set(
+      (input.getAttribute("aria-describedby") || "").split(" ").filter(Boolean),
+    );
+    descriptions.add(error.id);
+    input.setAttribute("aria-describedby", [...descriptions].join(" "));
   }
 
   function enforceAccountingOptions() {
@@ -204,67 +165,86 @@ export function initCalculator() {
     if (isCompany) accounting.value = "PELNA";
     for (const option of accounting.options)
       option.disabled = isCompany && option.value !== "PELNA";
-    const hint = field("rodzaj-hint");
-    if (hint) hint.textContent = isCompany ? message("hint_spolka") : "";
+    field("rodzaj-hint").textContent = isCompany
+      ? "Dla spółki z o.o. dostępna jest wyłącznie pełna księgowość."
+      : "";
   }
 
   function numericError(suffix) {
     const input = field(suffix);
-    const value = input.value.trim();
-    const numericValue = Number(value);
+    const value = Number(input.value);
     if (
       input.validity.badInput ||
-      (value !== "" &&
-        (!Number.isFinite(numericValue) || !Number.isInteger(numericValue)))
-    ) {
+      !Number.isSafeInteger(value) ||
+      input.validity.stepMismatch
+    )
       return "Wpisz pełną liczbę, np. 0, 1 lub 30.";
-    }
-    if (numericValue < 0 || input.validity.rangeUnderflow)
+    if (value < 0 || input.validity.rangeUnderflow)
       return "Liczba nie może być mniejsza niż 0.";
-    if (input.validity.stepMismatch)
-      return "Wpisz pełną liczbę, np. 0, 1 lub 30.";
     return "";
   }
 
-  function validateForm() {
-    const failures = [
-      ["privacy", field("privacy").checked ? "" : message("privacy_required")],
-      ["imie", field("imie").value.trim() ? "" : message("name_required")],
-      [
-        "telefon",
-        (field("telefon").value.match(/\d/g) || []).length >= 9
-          ? ""
-          : message("phone_required"),
-      ],
-      [
-        "email",
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field("email").value.trim())
-          ? ""
-          : message("email_required"),
-      ],
-      ...numericFields.map((suffix) => [suffix, numericError(suffix)]),
-    ];
+  function validate(failures) {
     for (const [suffix, error] of failures) setError(suffix, error);
     const first = failures.find(([, error]) => error);
-    if (first) {
-      setStatus(first[1], "error");
-      field(first[0]).focus();
-      return false;
-    }
-    return true;
+    if (!first) return true;
+    setStatus(first[1], "error");
+    field(first[0]).focus();
+    return false;
   }
 
-  function showQuote(quote) {
-    const label = document.createElement("p");
-    label.className = "calculator-result-label";
-    label.textContent = "Orientacyjny koszt obsługi";
-    const price = document.createElement("p");
-    price.className = "calculator-result-price";
-    price.id = "omega-kalk-kwota";
-    price.textContent = formatPLN.format(quote.total);
-    const details = document.createElement("p");
-    details.className = "calculator-result-details";
-    details.id = "omega-kalk-breakdown";
+  function hideConfirmation() {
+    contact.hidden = true;
+    confirm.hidden = false;
+    confirm.setAttribute("aria-expanded", "false");
+  }
+
+  function invalidateQuote() {
+    quote = null;
+    sent = false;
+    result.hidden = true;
+    hideConfirmation();
+    send.disabled = false;
+    send.replaceChildren(...initialSendNodes);
+    setStatus("");
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (busy || form.hidden) return;
+    if (
+      !validate(numericFields.map((suffix) => [suffix, numericError(suffix)]))
+    )
+      return;
+    enforceAccountingOptions();
+    const data = config();
+    // Static previews (including GitHub Pages) calculate without a backend.
+    // A WordPress configuration must supply its current rules.
+    const rules = validRules(data.rules)
+      ? data.rules
+      : !window.OmegaKalkData || isLocal
+        ? ORIGINAL_RULES
+        : null;
+    try {
+      quote = calculateQuote(
+        {
+          forma: field("forma").value,
+          rodzaj: field("rodzaj").value,
+          dokumenty: field("dokumenty").value,
+          pracUop: field("pracUop").value,
+          pracUoz: field("pracUoz").value,
+          vat: field("vat").checked,
+          eksport: field("eksport").checked,
+        },
+        rules,
+      );
+      if (!Number.isFinite(quote.total)) throw new Error("Invalid total");
+    } catch {
+      quote = null;
+      setStatus(CONFIG_ERROR, "error");
+      return;
+    }
+    field("kwota").textContent = `od ${formatPLN.format(quote.total)}`;
     const names = {
       JDG: "JDG",
       SPOLKA_ZOO: "Spółka z o.o.",
@@ -272,24 +252,35 @@ export function initCalculator() {
       KPIR: "KPiR",
       PELNA: "Pełna księgowość",
     };
-    details.textContent = [
+    field("breakdown").textContent = [
       names[quote.inputs.forma],
       names[quote.inputs.rodzaj],
       `${quote.inputs.dokumenty} dok. / mies.`,
-      quote.inputs.pracUop ? `${quote.inputs.pracUop} UoP` : "",
-      quote.inputs.pracUoz ? `${quote.inputs.pracUoz} UoZ` : "",
-      quote.inputs.vat ? "VAT" : "",
-      quote.inputs.eksport ? "Eksport/import" : "",
-    ]
-      .filter(Boolean)
-      .join(" · ");
-    const disclaimer = document.createElement("p");
-    disclaimer.className = "calculator-result-disclaimer";
-    disclaimer.textContent = message("disclaimer");
-    result.replaceChildren(label, price, details, disclaimer);
+      `UoP: ${quote.inputs.pracUop}`,
+      `UoZ: ${quote.inputs.pracUoz}`,
+      `VAT: ${quote.inputs.vat ? "tak" : "nie"}`,
+      `Eksport/import: ${quote.inputs.eksport ? "tak" : "nie"}`,
+    ].join(" · ");
+    setStatus("");
+    form.hidden = true;
     result.hidden = false;
-    result.classList.remove("ok-hidden");
-  }
+    result.focus();
+  });
+
+  confirm.addEventListener("click", () => {
+    if (!quote || busy || sent) return;
+    contact.hidden = false;
+    confirm.setAttribute("aria-expanded", "true");
+    confirm.hidden = true;
+    field("imie").focus();
+  });
+
+  edit.addEventListener("click", () => {
+    if (busy) return;
+    invalidateQuote();
+    form.hidden = false;
+    field("forma").focus();
+  });
 
   function destination(data) {
     if (!data.ajax_url || !data.nonce) return null;
@@ -304,54 +295,64 @@ export function initCalculator() {
     }
   }
 
-  async function submit(event) {
+  contact.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (busy) return;
-    result.hidden = true;
-    if (!validateForm()) return;
-    enforceAccountingOptions();
+    if (busy || sent || !quote || contact.hidden) return;
+    if (
+      !validate([
+        ["imie", field("imie").value.trim() ? "" : "Podaj imię."],
+        [
+          "telefon",
+          (field("telefon").value.match(/\d/g) || []).length >= 9
+            ? ""
+            : "Telefon powinien zawierać przynajmniej 9 cyfr.",
+        ],
+        [
+          "email",
+          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field("email").value.trim())
+            ? ""
+            : "Podaj poprawny adres e-mail.",
+        ],
+        [
+          "wiadomosc",
+          field("wiadomosc").value.length <= 3000
+            ? ""
+            : "Wiadomość może mieć maksymalnie 3000 znaków.",
+        ],
+        [
+          "privacy",
+          field("privacy").checked
+            ? ""
+            : "Aby wysłać wynik, zaakceptuj zgodę na przetwarzanie danych.",
+        ],
+      ])
+    )
+      return;
     const data = config();
-    const rules = validRules(data.rules)
-      ? data.rules
-      : isPreview
-        ? ORIGINAL_RULES
-        : null;
     const endpoint = destination(data);
-    if (!rules || (!isPreview && !endpoint)) {
-      setStatus(CONFIG_ERROR, "error");
-      return;
-    }
-
-    let quote;
-    try {
-      quote = calculateQuote(
-        {
-          forma: field("forma").value,
-          rodzaj: field("rodzaj").value,
-          dokumenty: field("dokumenty").value,
-          pracUop: field("pracUop").value,
-          pracUoz: field("pracUoz").value,
-          vat: field("vat").checked,
-          eksport: field("eksport").checked,
-        },
-        rules,
+    if (isLocal || !window.OmegaKalkData) {
+      setStatus(
+        "Tryb podglądu: formularz jest poprawny. Wynik, dane kalkulatora i wiadomość nie zostały wysłane. Wysyłka będzie dostępna po podłączeniu WordPressa.",
+        "preview",
       );
-    } catch {
-      setStatus(CONFIG_ERROR, "error");
       return;
     }
-    showQuote(quote);
-    if (isPreview) {
-      setStatus(PREVIEW_MESSAGE, "preview");
+    if (!endpoint || !window.OmegaMGConfirmation?.enabled) {
+      setStatus(
+        "Wysyłka jest chwilowo niedostępna. Twoja wycena pozostaje widoczna. Skontaktuj się z biurem pod numerem +48 505 448 081.",
+        "error",
+      );
       return;
     }
-
+    // Preserve the reviewed quote, rather than recalculating from hidden fields.
     const payload = {
       action: "omega_kalk_lead",
       nonce: data.nonce,
+      omega_redesign_confirmation: "1",
       imie: field("imie").value.trim(),
       telefon: field("telefon").value.trim(),
       email: field("email").value.trim(),
+      wiadomosc: field("wiadomosc").value.trim(),
       ...quote.inputs,
       vat: quote.inputs.vat ? 1 : 0,
       eksport: quote.inputs.eksport ? 1 : 0,
@@ -363,22 +364,22 @@ export function initCalculator() {
     const body = new FormData();
     for (const [key, value] of Object.entries(payload))
       body.append(key, String(value));
-    const requestRevision = ++revision;
     const controls = [
-      ...form.querySelectorAll("input, select, button, textarea"),
+      ...contact.querySelectorAll("input, textarea, button"),
+      edit,
+      confirm,
     ].map((control) => [control, control.disabled]);
     const controller = new AbortController();
     let timedOut = false;
-    const timeoutId = setTimeout(() => {
+    const timeout = setTimeout(() => {
       timedOut = true;
       controller.abort();
     }, 15000);
     busy = true;
     for (const [control] of controls) control.disabled = true;
-    form.setAttribute("aria-busy", "true");
-    button.setAttribute("aria-busy", "true");
-    button.textContent = message("sending");
-    setStatus(message("sending"), "sending");
+    contact.setAttribute("aria-busy", "true");
+    send.textContent = "Wysyłam…";
+    setStatus("Wysyłam wynik do potwierdzenia…", "sending");
     try {
       const response = await fetch(endpoint, {
         method: "POST",
@@ -392,61 +393,73 @@ export function initCalculator() {
       } catch (error) {
         if (controller.signal.aborted) throw error;
       }
-      if (requestRevision !== revision) return;
-      if (response.ok && responseData?.success)
-        setStatus(message("success"), "success");
-      else
+      if (response.ok && responseData?.success) {
+        sent = true;
         setStatus(
-          responseData?.data?.message || message("error_send"),
+          "Dziękujemy! Wynik i wiadomość zostały wysłane do biura do potwierdzenia. Skontaktujemy się z Tobą.",
+          "success",
+        );
+      } else {
+        setStatus(
+          responseData?.data?.message ||
+            "Nie udało się wysłać zapytania. Spróbuj ponownie lub skontaktuj się z biurem telefonicznie.",
           "error",
         );
+      }
     } catch {
-      if (requestRevision === revision)
-        setStatus(
-          message(timedOut ? "error_timeout" : "error_network"),
-          "error",
-        );
+      setStatus(
+        timedOut
+          ? "Przekroczono czas oczekiwania. Nie mamy potwierdzenia wysyłki. Skontaktuj się z biurem telefonicznie."
+          : "Błąd połączenia. Nie mamy potwierdzenia wysyłki. Spróbuj ponownie później lub skontaktuj się z biurem.",
+        "error",
+      );
     } finally {
-      clearTimeout(timeoutId);
+      clearTimeout(timeout);
       busy = false;
-      for (const [control, wasDisabled] of controls)
-        control.disabled = wasDisabled;
-      form.removeAttribute("aria-busy");
-      button.removeAttribute("aria-busy");
-      button.replaceChildren(...initialButtonNodes);
+      contact.removeAttribute("aria-busy");
+      for (const [control, disabled] of controls) control.disabled = disabled;
+      send.replaceChildren(...initialSendNodes);
+      if (sent) {
+        send.disabled = true;
+        send.textContent = "Wysłano do potwierdzenia";
+      }
     }
-  }
+  });
 
   enforceAccountingOptions();
-  field("forma").addEventListener("change", enforceAccountingOptions);
-  button.addEventListener("click", submit);
-  form.addEventListener("submit", submit);
-  function handleEdit(event) {
+  form.addEventListener("input", (event) => {
     if (busy) return;
+    invalidateQuote();
     const suffix = event.target.id?.replace("omega-kalk-", "");
-    if (!requiredFields.includes(suffix)) return;
-    result.hidden = true;
+    if (numericFields.includes(suffix)) setError(suffix, "");
+  });
+  form.addEventListener("change", () => {
+    if (!busy) {
+      invalidateQuote();
+      enforceAccountingOptions();
+    }
+  });
+  contact.addEventListener("input", (event) => {
+    if (busy || sent) return;
+    const suffix = event.target.id?.replace("omega-kalk-", "");
+    if (contactFields.includes(suffix)) setError(suffix, "");
     setStatus("");
-    if (validatedFields.includes(suffix)) setError(suffix, "");
-  }
-  form.addEventListener("input", handleEdit);
-  form.addEventListener("change", handleEdit);
+  });
   form.addEventListener("reset", (event) => {
     if (busy) {
       event.preventDefault();
       return;
     }
-    revision += 1;
-    result.hidden = true;
-    setStatus("");
-    for (const suffix of validatedFields) setError(suffix, "");
-    // Reset's native default action can follow a microtask checkpoint. Wait for
-    // the next task and restore the accounting default even if it was disabled.
+    invalidateQuote();
+    contact.reset();
+    for (const suffix of [...numericFields, ...contactFields])
+      setError(suffix, "");
+    // Wait until the browser performs reset's native default action.
     setTimeout(() => {
       field("forma").value = defaultForma;
       field("rodzaj").value = defaultRodzaj;
       enforceAccountingOptions();
     }, 0);
   });
-  return { form };
+  return { form, contact };
 }

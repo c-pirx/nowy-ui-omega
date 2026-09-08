@@ -849,7 +849,8 @@ select:focus-visible,
 .calculator-workspace {
   min-width: 0;
 }
-#omega-kalk-form {
+#omega-kalk-form,
+.calculator-contact-form {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -916,7 +917,8 @@ fieldset {
   font-weight: 400;
 }
 .field input,
-.field select {
+.field select,
+.field textarea {
   width: 100%;
   min-width: 0;
   height: 48px;
@@ -935,16 +937,19 @@ fieldset {
   background-repeat: no-repeat;
   background-position: right 13px center;
 }
-.field input::placeholder {
+.field input::placeholder,
+.field textarea::placeholder {
   color: var(--brown);
   opacity: 1;
 }
 .field input:hover,
-.field select:hover {
+.field select:hover,
+.field textarea:hover {
   border-color: var(--brown);
 }
 .field input:focus,
-.field select:focus {
+.field select:focus,
+.field textarea:focus {
   border-color: var(--brown);
   box-shadow: 0 0 0 3px rgba(94, 76, 59, 0.07);
 }
@@ -1066,16 +1071,19 @@ fieldset {
   color: var(--brown);
   margin-top: 17px;
 }
-#omega-kalk-status {
+#omega-kalk-status,
+#omega-kalk-contact-status {
   font-size: 12px;
   line-height: 1.7;
   color: var(--brown);
   margin-top: 14px;
 }
-#omega-kalk-status:empty {
+#omega-kalk-status:empty,
+#omega-kalk-contact-status:empty {
   display: none;
 }
-#omega-kalk-status[data-state="error"] {
+#omega-kalk-status[data-state="error"],
+#omega-kalk-contact-status[data-state="error"] {
   color: var(--red);
 }
 button:disabled {
@@ -1406,7 +1414,8 @@ button:disabled {
   .calculator-intro h2 {
     font-size: 34px;
   }
-  #omega-kalk-form {
+  #omega-kalk-form,
+  .calculator-contact-form {
     padding: 29px;
   }
   .contact-grid {
@@ -1654,7 +1663,8 @@ button:disabled {
   .calculator-contact {
     display: none;
   }
-  #omega-kalk-form {
+  #omega-kalk-form,
+  .calculator-contact-form {
     padding: 36px;
   }
   .contact-top h2 {
@@ -2005,7 +2015,8 @@ button:disabled {
   .calculator-steps {
     display: none;
   }
-  #omega-kalk-form {
+  #omega-kalk-form,
+  .calculator-contact-form {
     padding: 25px 20px;
   }
   .form-group {
@@ -2038,7 +2049,8 @@ button:disabled {
     font-size: 13px;
   }
   .field input,
-  .field select {
+  .field select,
+  .field textarea {
     font-size: 16px;
     height: 50px;
     padding: 12px;
@@ -2300,7 +2312,8 @@ button:disabled {
   .lead {
     font-size: 18px;
   }
-  #omega-kalk-form {
+  #omega-kalk-form,
+  .calculator-contact-form {
     padding: 23px 16px;
   }
   .contact-main-link {
@@ -2324,6 +2337,7 @@ button:disabled {
 }
 @media (prefers-reduced-motion: no-preference) {
   .calculator-result:not([hidden]),
+  .calculator-contact-form:not([hidden]),
   #certification-widget:not([hidden]) {
     animation: omega-result-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
   }
@@ -2468,5 +2482,87 @@ button:disabled {
   .contact-section,
   .calculator-result {
     print-color-adjust: exact;
+  }
+}
+
+/* Stroke icons stay identical on mobile, independent of emoji fonts. */
+.arrow-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  vertical-align: -0.12em;
+}
+.field textarea {
+  height: auto;
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+}
+.confirmation-intro {
+  margin: 0 0 24px;
+  color: var(--brown);
+  font-size: 13px;
+  line-height: 1.8;
+}
+.optional-label {
+  font-weight: 400;
+}
+.calculator-contact-form {
+  margin-top: 20px;
+}
+.calculator-result {
+  margin-top: 0;
+}
+.calculator-result-price small {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.result-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 26px;
+}
+.result-actions .button-white {
+  color: var(--brown);
+  background: #fff;
+  border-color: #fff;
+  gap: 16px;
+  font-size: 12px;
+}
+.result-actions .button-white:hover {
+  color: var(--red);
+}
+.result-edit {
+  color: #fff;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 10px 0;
+  min-height: 44px;
+  font-size: 12px;
+}
+.result-edit:hover {
+  border-color: #fff;
+}
+@media (max-width: 600px) {
+  .result-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .result-actions .button {
+    width: 100%;
+    padding-inline: 16px;
+  }
+  .result-edit {
+    align-self: flex-start;
+  }
+  .calculator-contact-form .form-actions .button {
+    width: 100%;
+    flex-basis: 100%;
   }
 }

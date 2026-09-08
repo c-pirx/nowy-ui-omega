@@ -8,5 +8,8 @@
     "start": "node scripts/serve.mjs",
     "test": "node --test tests/*.test.mjs",
     "package:wordpress": "node scripts/package-wordpress.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
   }
 }
