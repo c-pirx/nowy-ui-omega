@@ -162,17 +162,64 @@ function omega_woocommerce_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'omega_woocommerce_assets', 20 );
 
+// Pusty koszyk: własna treść zamiast domyślnej ikonki i siatki bloku WooCommerce.
+function omega_empty_cart_block( $content ) {
+\t$arrow  = '<span aria-hidden="true"><svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14" /></svg></span>';
+\t$markup = '<section class="empty-cart">'
+\t\t. '<div class="empty-cart-intro"><p class="eyebrow"><span class="eyebrow-line"></span>Sklep Omega MG</p>'
+\t\t. '<h2>Twój koszyk jest pusty<span class="red-dot">.</span></h2>'
+\t\t. '<p>Materiały kupujesz raz i pobierasz od razu po opłaceniu. Zajrzyj do sklepu albo wróć na stronę główną.</p>'
+\t\t. '<div class="empty-cart-actions"><a class="button" href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '">Przejdź do sklepu' . $arrow . '</a>'
+\t\t. '<a class="text-link" href="' . esc_url( home_url( '/' ) ) . '">Strona główna' . $arrow . '</a></div></div>'
+\t\t. '<div class="empty-cart-products"><div class="empty-cart-heading"><div><p class="eyebrow">Nowe w sklepie</p><h3>Zacznij od tych materiałów<span class="red-dot">.</span></h3></div>'
+\t\t. '<a class="text-link" href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '">Wszystkie produkty' . $arrow . '</a></div>'
+\t\t. do_shortcode( '[products limit="3" columns="3" orderby="date" order="DESC"]' ) . '</div></section>';
+\treturn preg_replace( '/^(\\s*<div[^>]*>)[\\s\\S]*(<\\/div>\\s*)$/', '$1' . str_replace( '$', '\\\\$', $markup ) . '$2', $content );
+}
+add_filter( 'render_block_woocommerce/empty-cart-block', 'omega_empty_cart_block' );
+
 // Ikona koszyka w nagłówku: zawsze w sklepie, poza nim tylko gdy koszyk nie jest pusty.
+// Po najechaniu lub fokusie rozwija się mini-koszyk; na stronach koszyka i zamówienia jest zbędny.
 function omega_cart_link() {
 \tif ( ! function_exists( 'WC' ) || ! WC()->cart ) return;
 \t$count = (int) WC()->cart->get_cart_contents_count();
 \t$shop  = wp_doing_ajax() || is_woocommerce() || is_cart() || is_checkout() || is_account_page();
 \tprintf(
-\t\t'<a class="header-cart" href="%1$s" data-count="%2$d" aria-label="%3$s"%4$s><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5.5 8.5h13l-1 11h-11z" /><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" /></svg><span class="cart-count" aria-hidden="true">%2$d</span></a>',
+\t\t'<div class="header-cart" data-count="%2$d"%4$s><a class="header-cart-link" href="%1$s" aria-label="%3$s"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5.5 8.5h13l-1 11h-11z" /><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" /></svg><span class="cart-count" aria-hidden="true">%2$d</span></a>',
 \t\tesc_url( wc_get_cart_url() ),
 \t\t$count,
 \t\tesc_attr( sprintf( 'Koszyk, produktów: %d', $count ) ),
 \t\t$count || $shop ? '' : ' hidden'
+\t);
+\tif ( ! ( is_cart() || is_checkout() ) ) omega_cart_panel();
+\techo '</div>';
+}
+
+function omega_cart_panel() {
+\t$items = WC()->cart->get_cart();
+\techo '<div class="header-cart-panel"><div class="header-cart-card"><p class="eyebrow">Koszyk</p>';
+\tif ( ! $items ) {
+\t\techo '<p class="header-cart-empty">Twój koszyk jest pusty.</p>';
+\t} else {
+\t\techo '<ul class="header-cart-items">';
+\t\tforeach ( $items as $cart_item ) {
+\t\t\t$product = $cart_item['data'];
+\t\t\tif ( ! $product || ! $product->exists() ) continue;
+\t\t\tprintf(
+\t\t\t\t'<li>%1$s<div><a href="%2$s">%3$s</a><span>%4$d × %5$s</span></div></li>',
+\t\t\t\t$product->get_image( 'woocommerce_gallery_thumbnail' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+\t\t\t\tesc_url( $product->get_permalink( $cart_item ) ),
+\t\t\t\tesc_html( $product->get_name() ),
+\t\t\t\t(int) $cart_item['quantity'],
+\t\t\t\tWC()->cart->get_product_price( $product ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+\t\t\t);
+\t\t}
+\t\techo '</ul><p class="header-cart-total"><span>Razem</span><strong>' . WC()->cart->get_cart_subtotal() . '</strong></p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+\t}
+\tprintf(
+\t\t'<div class="header-cart-actions"><a class="button button-small" href="%1$s">Zobacz koszyk</a>%2$s</div></div></div>',
+\t\tesc_url( wc_get_cart_url() ),
+\t\t$items ? '<a class="text-link" href="' . esc_url( wc_get_checkout_url() ) . '">Do kasy</a>' : ''
 \t);
 }
 
@@ -195,10 +242,10 @@ function omega_cart_live_count() {
 \t\t\tvar store = window.wp && wp.data && wp.data.select( 'wc/store/cart' );
 \t\t\tif ( ! store ) return;
 \t\t\tvar count = store.getCartData().itemsCount;
-\t\t\tdocument.querySelectorAll( '.header-cart' ).forEach( function ( link ) {
-\t\t\t\tlink.dataset.count = count;
-\t\t\t\tlink.querySelector( '.cart-count' ).textContent = count;
-\t\t\t\tlink.setAttribute( 'aria-label', 'Koszyk, produktów: ' + count );
+\t\t\tdocument.querySelectorAll( '.header-cart' ).forEach( function ( cart ) {
+\t\t\t\tcart.dataset.count = count;
+\t\t\t\tcart.querySelector( '.cart-count' ).textContent = count;
+\t\t\t\tcart.querySelector( '.header-cart-link' ).setAttribute( 'aria-label', 'Koszyk, produktów: ' + count );
 \t\t\t} );
 \t\t}
 \t\twindow.addEventListener( 'load', function () {
@@ -233,6 +280,7 @@ const woocommercePhp = `<?php get_header(); ?>
 \t\t\t<a href="<?php echo esc_url( get_term_link( $omega_term ) ); ?>"<?php if ( is_tax( 'product_cat', $omega_term->slug ) ) echo ' aria-current="page"'; ?>><?php echo esc_html( $omega_term->name ); ?></a>
 \t\t\t<?php endforeach; ?>
 \t\t</nav>
+\t\t<script>document.querySelectorAll( '.shop-categories' ).forEach( function ( nav ) { var active = nav.querySelector( '[aria-current]' ); if ( active ) nav.scrollLeft = active.offsetLeft; } );</script>
 \t\t<?php endif; ?>
 \t\t<?php woocommerce_content(); ?>
 \t</div>
@@ -327,14 +375,33 @@ await writeFile(join(theme, "assets", "css", "site.css"), css
   .replace(/url\((['"]?)assets\//g, "url($1../" ) + `
 .content-page { max-width: 900px; }
 .content-page h1 { margin-bottom: 28px; font-size: clamp(32px, 3.4vw, 44px); color: var(--brown); }
-.header-cart { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex-shrink: 0; color: var(--ink); }
-.header-cart:hover, .header-cart:focus-visible { color: var(--red); }
-.header-cart svg { width: 22px; height: 22px; }
+.header-cart { position: relative; display: inline-flex; flex-shrink: 0; }
+.header-cart-link { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; color: var(--ink); }
+.header-cart:hover .header-cart-link, .header-cart-link:focus-visible { color: var(--red); }
+.header-cart-link svg { width: 22px; height: 22px; }
 .header-cart .cart-count { position: absolute; top: 1px; right: -2px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-family: Poppins, sans-serif; font-size: 10px; font-weight: 500; line-height: 18px; text-align: center; }
 .header-cart[data-count="0"] .cart-count { display: none; }
 .desktop-nav .header-cart { margin-left: -6px; }
 .header-inner > .header-cart { display: none; }
-@media (max-width: 1023px) { .header-inner > .header-cart { display: inline-flex; margin-left: -6px; } }
+.header-cart-panel { position: absolute; top: 100%; right: -8px; z-index: 1; width: 340px; padding-top: 10px; opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity 0.18s, transform 0.18s, visibility 0s linear 0.18s; white-space: normal; text-align: left; }
+.header-cart:hover .header-cart-panel, .header-cart:focus-within .header-cart-panel { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.header-cart-card { padding: 24px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 16px 48px rgba(94, 76, 59, 0.14); }
+.header-cart-card .eyebrow { margin-bottom: 14px; }
+.header-cart-empty { font-size: 14px; color: var(--brown); }
+.header-cart-items { list-style: none; margin: 0; padding: 0; max-height: 264px; overflow-y: auto; }
+.header-cart-items li { display: flex; gap: 14px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.header-cart-items li:first-child { border-top: 0; padding-top: 0; }
+.header-cart-items img { width: 48px; height: 48px; flex-shrink: 0; object-fit: cover; border-radius: var(--radius); }
+.header-cart-items div { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.header-cart-items a { font-family: Poppins, sans-serif; font-size: 14px; font-weight: 500; line-height: 1.35; letter-spacing: -0.01em; color: var(--ink); }
+.header-cart-items a:hover { color: var(--red); }
+.header-cart-items span { font-size: 12px; color: var(--brown); }
+.header-cart-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 8px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--brown); }
+.header-cart-total strong { font-family: Poppins, sans-serif; font-size: 18px; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); }
+.header-cart-actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 18px; }
+.header-cart-actions .button { min-height: 40px; padding: 8px 16px; gap: 14px; font-size: 12px; }
+.header-cart-actions .text-link { min-height: 40px; gap: 12px; font-size: 13px; }
+@media (max-width: 1023px) { .header-inner > .header-cart { display: inline-flex; margin-left: -6px; } .header-cart-panel { display: none; } }
 .entry-content > * + * { margin-top: 1.25em; }
 `);
 await writeFile(join(theme, "assets", "js", "main.js"), mainJs);

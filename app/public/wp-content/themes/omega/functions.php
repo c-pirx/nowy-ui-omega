@@ -82,17 +82,64 @@ function omega_woocommerce_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'omega_woocommerce_assets', 20 );
 
+// Pusty koszyk: własna treść zamiast domyślnej ikonki i siatki bloku WooCommerce.
+function omega_empty_cart_block( $content ) {
+	$arrow  = '<span aria-hidden="true"><svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14" /></svg></span>';
+	$markup = '<section class="empty-cart">'
+		. '<div class="empty-cart-intro"><p class="eyebrow"><span class="eyebrow-line"></span>Sklep Omega MG</p>'
+		. '<h2>Twój koszyk jest pusty<span class="red-dot">.</span></h2>'
+		. '<p>Materiały kupujesz raz i pobierasz od razu po opłaceniu. Zajrzyj do sklepu albo wróć na stronę główną.</p>'
+		. '<div class="empty-cart-actions"><a class="button" href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '">Przejdź do sklepu' . $arrow . '</a>'
+		. '<a class="text-link" href="' . esc_url( home_url( '/' ) ) . '">Strona główna' . $arrow . '</a></div></div>'
+		. '<div class="empty-cart-products"><div class="empty-cart-heading"><div><p class="eyebrow">Nowe w sklepie</p><h3>Zacznij od tych materiałów<span class="red-dot">.</span></h3></div>'
+		. '<a class="text-link" href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '">Wszystkie produkty' . $arrow . '</a></div>'
+		. do_shortcode( '[products limit="3" columns="3" orderby="date" order="DESC"]' ) . '</div></section>';
+	return preg_replace( '/^(\s*<div[^>]*>)[\s\S]*(<\/div>\s*)$/', '$1' . str_replace( '$', '\\$', $markup ) . '$2', $content );
+}
+add_filter( 'render_block_woocommerce/empty-cart-block', 'omega_empty_cart_block' );
+
 // Ikona koszyka w nagłówku: zawsze w sklepie, poza nim tylko gdy koszyk nie jest pusty.
+// Po najechaniu lub fokusie rozwija się mini-koszyk; na stronach koszyka i zamówienia jest zbędny.
 function omega_cart_link() {
 	if ( ! function_exists( 'WC' ) || ! WC()->cart ) return;
 	$count = (int) WC()->cart->get_cart_contents_count();
 	$shop  = wp_doing_ajax() || is_woocommerce() || is_cart() || is_checkout() || is_account_page();
 	printf(
-		'<a class="header-cart" href="%1$s" data-count="%2$d" aria-label="%3$s"%4$s><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5.5 8.5h13l-1 11h-11z" /><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" /></svg><span class="cart-count" aria-hidden="true">%2$d</span></a>',
+		'<div class="header-cart" data-count="%2$d"%4$s><a class="header-cart-link" href="%1$s" aria-label="%3$s"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5.5 8.5h13l-1 11h-11z" /><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" /></svg><span class="cart-count" aria-hidden="true">%2$d</span></a>',
 		esc_url( wc_get_cart_url() ),
 		$count,
 		esc_attr( sprintf( 'Koszyk, produktów: %d', $count ) ),
 		$count || $shop ? '' : ' hidden'
+	);
+	if ( ! ( is_cart() || is_checkout() ) ) omega_cart_panel();
+	echo '</div>';
+}
+
+function omega_cart_panel() {
+	$items = WC()->cart->get_cart();
+	echo '<div class="header-cart-panel"><div class="header-cart-card"><p class="eyebrow">Koszyk</p>';
+	if ( ! $items ) {
+		echo '<p class="header-cart-empty">Twój koszyk jest pusty.</p>';
+	} else {
+		echo '<ul class="header-cart-items">';
+		foreach ( $items as $cart_item ) {
+			$product = $cart_item['data'];
+			if ( ! $product || ! $product->exists() ) continue;
+			printf(
+				'<li>%1$s<div><a href="%2$s">%3$s</a><span>%4$d × %5$s</span></div></li>',
+				$product->get_image( 'woocommerce_gallery_thumbnail' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				esc_url( $product->get_permalink( $cart_item ) ),
+				esc_html( $product->get_name() ),
+				(int) $cart_item['quantity'],
+				WC()->cart->get_product_price( $product ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			);
+		}
+		echo '</ul><p class="header-cart-total"><span>Razem</span><strong>' . WC()->cart->get_cart_subtotal() . '</strong></p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+	printf(
+		'<div class="header-cart-actions"><a class="button button-small" href="%1$s">Zobacz koszyk</a>%2$s</div></div></div>',
+		esc_url( wc_get_cart_url() ),
+		$items ? '<a class="text-link" href="' . esc_url( wc_get_checkout_url() ) . '">Do kasy</a>' : ''
 	);
 }
 
@@ -115,10 +162,10 @@ function omega_cart_live_count() {
 			var store = window.wp && wp.data && wp.data.select( 'wc/store/cart' );
 			if ( ! store ) return;
 			var count = store.getCartData().itemsCount;
-			document.querySelectorAll( '.header-cart' ).forEach( function ( link ) {
-				link.dataset.count = count;
-				link.querySelector( '.cart-count' ).textContent = count;
-				link.setAttribute( 'aria-label', 'Koszyk, produktów: ' + count );
+			document.querySelectorAll( '.header-cart' ).forEach( function ( cart ) {
+				cart.dataset.count = count;
+				cart.querySelector( '.cart-count' ).textContent = count;
+				cart.querySelector( '.header-cart-link' ).setAttribute( 'aria-label', 'Koszyk, produktów: ' + count );
 			} );
 		}
 		window.addEventListener( 'load', function () {

@@ -24,6 +24,8 @@ test("WordPress theme is native, self-contained and keeps the approved sections"
   assert.match(functions, /woocommerce_enqueue_styles.*__return_empty_array/);
   assert.equal((header.match(/omega_cart_link\(\)/g) || []).length, 2);
   assert.match(functions, /woocommerce_add_to_cart_fragments/);
+  assert.match(functions, /header-cart-panel/);
+  assert.match(functions, /render_block_woocommerce\/empty-cart-block/);
   assert.match(footer, /wp_footer\(\)/);
   assert.doesNotMatch(main, /initCalculator|calculator\.js/);
   assert.match(main, /if \(logos && prev && next\)/);

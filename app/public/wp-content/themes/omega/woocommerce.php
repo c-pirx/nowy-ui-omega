@@ -20,6 +20,7 @@
 			<a href="<?php echo esc_url( get_term_link( $omega_term ) ); ?>"<?php if ( is_tax( 'product_cat', $omega_term->slug ) ) echo ' aria-current="page"'; ?>><?php echo esc_html( $omega_term->name ); ?></a>
 			<?php endforeach; ?>
 		</nav>
+		<script>document.querySelectorAll( '.shop-categories' ).forEach( function ( nav ) { var active = nav.querySelector( '[aria-current]' ); if ( active ) nav.scrollLeft = active.offsetLeft; } );</script>
 		<?php endif; ?>
 		<?php woocommerce_content(); ?>
 	</div>
