@@ -114,8 +114,16 @@ export function initNavigation(doc = document) {
   desktop.addEventListener("change", () => closeMenu());
   win.addEventListener("pagehide", () => closeMenu());
 
+  // Same-page anchors: "#id" on the static site, home_url('/#id') in the WordPress theme.
+  // Future page links have no hash; header links on a subpage point at another pathname.
+  const samePageAnchor = (link) =>
+    link.hash.length > 1 &&
+    link.origin === win.location.origin &&
+    link.pathname === win.location.pathname;
+
   // Preserve homepage anchor behavior, including links outside the header.
-  doc.querySelectorAll('a[href^="#"]').forEach((link) => {
+  doc.querySelectorAll("a[href*='#']").forEach((link) => {
+    if (!samePageAnchor(link)) return;
     link.addEventListener("click", () => {
       const target = doc.getElementById(link.hash.slice(1));
       if (!target) return;
@@ -124,8 +132,7 @@ export function initNavigation(doc = document) {
     });
   });
 
-  // Future page links have no hash: never pass an empty selector to querySelector.
-  const anchors = [...header.querySelectorAll('a[href^="#"]')];
+  const anchors = [...header.querySelectorAll("a[href*='#']")].filter(samePageAnchor);
   if (win.IntersectionObserver) {
     const observer = new win.IntersectionObserver((entries) => {
       for (const entry of entries) {

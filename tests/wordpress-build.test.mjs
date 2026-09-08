@@ -18,6 +18,7 @@ test("WordPress theme is native, self-contained and keeps the approved sections"
   assert.match(front, /do_shortcode\( '\[omega_calculator\]' \)/);
   assert.doesNotMatch(front + functions, /file_get_contents|public\/index\.html/);
   assert.match(header, /wp_head\(\)/);
+  assert.match(header, /class="skip-link" href="#content"/);
   assert.match(footer, /wp_footer\(\)/);
   assert.doesNotMatch(main, /initCalculator|calculator\.js/);
   assert.match(main, /if \(logos && prev && next\)/);

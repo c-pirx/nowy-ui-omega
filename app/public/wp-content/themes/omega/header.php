@@ -8,7 +8,7 @@
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
-<a class="skip-link" href="<?php echo esc_url( home_url( '/#content' ) ); ?>">Przejdź do treści</a>
+<a class="skip-link" href="#content">Przejdź do treści</a>
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="<?php echo esc_url( home_url( '/#start' ) ); ?>" aria-label="Omega MG – strona główna">

@@ -30,7 +30,8 @@ function rewriteMarkup(value) {
       });
       return `srcset="${items.join(", ")}"`;
     })
-    .replace(/href="#([a-zA-Z0-9_-]+)"/g, (_m, id) =>
+    // The skip link stays in-page so it works on every template, not only the front page.
+    .replace(/href="#(?!content")([a-zA-Z0-9_-]+)"/g, (_m, id) =>
       `href="<?php echo esc_url( home_url( '/#${id}' ) ); ?>"`)
     .replace(/href="(o-mnie|ksiegowosc-dla-jdg|pelna-ksiegowosc-spolek|kadry-i-place|ksef-dla-firm|zmiana-biura-rachunkowego|ksiegowosc-online|baza-wiedzy)"/g, (_m, slug) =>
       `href="<?php echo esc_url( home_url( '/${slug}/' ) ); ?>"`)

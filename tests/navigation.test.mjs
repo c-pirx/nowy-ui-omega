@@ -5,21 +5,24 @@ import { JSDOM } from "jsdom";
 import { initNavigation } from "../public/navigation.js";
 
 const html = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
-function setup(t) {
+function setup(t, mutate = () => {}) {
   const dom = new JSDOM(html, { url: "https://c-pirx.github.io/nowy-ui-omega/" });
   t.after(() => dom.window.close());
   const media = new dom.window.EventTarget();
   dom.window.matchMedia = () => media;
   const observed = [];
+  const observers = [];
   dom.window.IntersectionObserver = class {
+    constructor(callback) { observers.push(callback); }
     observe(element) { observed.push(element.id); }
   };
   const doc = dom.window.document;
+  mutate(doc);
   initNavigation(doc);
   const key = (element, value, shiftKey = false) => element.dispatchEvent(
     new dom.window.KeyboardEvent("keydown", { key: value, shiftKey, bubbles: true, cancelable: true }),
   );
-  return { doc, media, observed, key };
+  return { doc, media, observed, observers, key };
 }
 
 test("dropdowns open with arrows, move focus, and close with Escape", (t) => {
@@ -119,4 +122,22 @@ test("future links preserve the Pages prefix, match between menus, and do not br
   assert.ok(observed.includes("kalkulator"));
   assert.ok(observed.includes("kontakt"));
   assert.ok(observed.includes("opinie"));
+});
+
+test("WordPress absolute same-page anchors keep focus management and section tracking", (t) => {
+  const site = "https://c-pirx.github.io/nowy-ui-omega/";
+  const { doc, observers } = setup(t, (d) => {
+    for (const link of d.querySelectorAll('a[href^="#"]')) link.setAttribute("href", site + link.getAttribute("href"));
+    // Header link as rendered on a subpage: another pathname, so not a same-page anchor.
+    d.querySelector('.desktop-nav a[href$="#kontakt"]').setAttribute("href", `${site}o-mnie/#kontakt`);
+  });
+  const anchor = doc.querySelector('.desktop-nav a[href$="#kalkulator"]');
+  const subpageLink = doc.querySelector('.desktop-nav a[href$="#kontakt"]');
+  anchor.click();
+  assert.equal(doc.activeElement, doc.getElementById("kalkulator"));
+  observers[0]([{ isIntersecting: true, target: doc.getElementById("kalkulator") }]);
+  assert.equal(anchor.getAttribute("aria-current"), "location");
+  observers[0]([{ isIntersecting: true, target: doc.getElementById("kontakt") }]);
+  assert.equal(anchor.getAttribute("aria-current"), null);
+  assert.equal(subpageLink.getAttribute("aria-current"), null);
 });
