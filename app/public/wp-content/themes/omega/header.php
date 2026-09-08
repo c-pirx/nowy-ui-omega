@@ -35,18 +35,9 @@
               <li><a href="<?php echo esc_url( home_url( '/ksiegowosc-online/' ) ); ?>">Księgowość online</a></li>
             </ul>
           </div>
-          <div class="nav-dropdown">
-            <button class="nav-link nav-disclosure" type="button" aria-expanded="false" aria-controls="desktop-shop">
-              SKLEP <svg class="nav-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-            </button>
-            <ul class="nav-submenu" id="desktop-shop" hidden>
-              <li><a href="<?php echo esc_url( home_url( '/sklep/e-booki-dla-ksiegowych/' ) ); ?>">E-booki dla księgowych</a></li>
-              <li><a href="<?php echo esc_url( home_url( '/sklep/e-booki-dla-przedsiebiorcow/' ) ); ?>">E-booki dla przedsiębiorców</a></li>
-              <li><a href="<?php echo esc_url( home_url( '/sklep/wzory-i-checklisty/' ) ); ?>">Wzory i checklisty</a></li>
-              <li><a href="<?php echo esc_url( home_url( '/sklep/pakiety-materialow/' ) ); ?>">Pakiety materiałów</a></li>
-            </ul>
-          </div>
+          <a class="nav-link" href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' ) ); ?>">SKLEP</a>
           <a class="nav-link" href="<?php echo esc_url( home_url( '/baza-wiedzy/' ) ); ?>">BAZA WIEDZY</a>
+          <a class="nav-link" href="<?php echo esc_url( home_url( '/#kontakt' ) ); ?>">KONTAKT</a>
         <a class="button button-small header-calculator" href="<?php echo esc_url( home_url( '/#kalkulator' ) ); ?>"
           >Kalkulator
           <span aria-hidden="true"
@@ -65,14 +56,14 @@
             >
               <path d="M5 19 19 5M5 5h14v14" /></svg></span
         ></a>
-          <a class="nav-link" href="<?php echo esc_url( home_url( '/#kontakt' ) ); ?>">KONTAKT</a>
+        <?php omega_cart_link(); ?>
         </nav>
         <a class="button button-small header-calculator mobile-header-calculator" href="<?php echo esc_url( home_url( '/#kalkulator' ) ); ?>">
           Kalkulator
           <span aria-hidden="true"><svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14" /></svg></span>
         </a>
-        <button
-          class="menu-toggle"
+        <?php omega_cart_link(); ?>
+        <button class="menu-toggle"
           aria-controls="mobile-navigation"
           aria-expanded="false"
           aria-label="Otwórz menu"
@@ -100,17 +91,7 @@
             <li><a href="<?php echo esc_url( home_url( '/ksiegowosc-online/' ) ); ?>">Księgowość online</a></li>
           </ul>
         </div>
-        <div class="nav-dropdown">
-          <button class="nav-disclosure" type="button" aria-expanded="false" aria-controls="mobile-shop">
-            SKLEP <svg class="nav-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-          </button>
-          <ul class="nav-submenu" id="mobile-shop" hidden>
-            <li><a href="<?php echo esc_url( home_url( '/sklep/e-booki-dla-ksiegowych/' ) ); ?>">E-booki dla księgowych</a></li>
-            <li><a href="<?php echo esc_url( home_url( '/sklep/e-booki-dla-przedsiebiorcow/' ) ); ?>">E-booki dla przedsiębiorców</a></li>
-            <li><a href="<?php echo esc_url( home_url( '/sklep/wzory-i-checklisty/' ) ); ?>">Wzory i checklisty</a></li>
-            <li><a href="<?php echo esc_url( home_url( '/sklep/pakiety-materialow/' ) ); ?>">Pakiety materiałów</a></li>
-          </ul>
-        </div>
+        <a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' ) ); ?>">SKLEP</a>
         <a href="<?php echo esc_url( home_url( '/baza-wiedzy/' ) ); ?>">BAZA WIEDZY</a>
         <a href="<?php echo esc_url( home_url( '/#kalkulator' ) ); ?>"
           >Kalkulator

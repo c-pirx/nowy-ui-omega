@@ -19,6 +19,11 @@ test("WordPress theme is native, self-contained and keeps the approved sections"
   assert.doesNotMatch(front + functions, /file_get_contents|public\/index\.html/);
   assert.match(header, /wp_head\(\)/);
   assert.match(header, /class="skip-link" href="#content"/);
+  const woocommerce = await read("app/public/wp-content/themes/omega/woocommerce.php");
+  assert.match(woocommerce, /woocommerce_content\(\)/);
+  assert.match(functions, /woocommerce_enqueue_styles.*__return_empty_array/);
+  assert.equal((header.match(/omega_cart_link\(\)/g) || []).length, 2);
+  assert.match(functions, /woocommerce_add_to_cart_fragments/);
   assert.match(footer, /wp_footer\(\)/);
   assert.doesNotMatch(main, /initCalculator|calculator\.js/);
   assert.match(main, /if \(logos && prev && next\)/);

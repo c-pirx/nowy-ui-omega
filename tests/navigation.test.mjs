@@ -45,17 +45,17 @@ test("dropdowns open with arrows, move focus, and close with Escape", (t) => {
   assert.equal(doc.activeElement, button);
 });
 
-test("only one dropdown opens; leaving it by focus or outside click closes it", (t) => {
+test("shop is a plain tab; leaving the services dropdown by focus or outside click closes it", (t) => {
   const { doc } = setup(t);
   const services = doc.querySelector('[aria-controls="desktop-services"]');
-  const shop = doc.querySelector('[aria-controls="desktop-shop"]');
+  assert.equal(doc.querySelectorAll(".desktop-nav .nav-dropdown").length, 1);
+  assert.equal(doc.querySelector('.desktop-nav > a[href="sklep"]').textContent.trim(), "SKLEP");
+  assert.equal(doc.querySelector('.mobile-nav > a[href="sklep"]').textContent.trim(), "SKLEP");
   services.click();
-  shop.click();
-  assert.equal(doc.getElementById("desktop-services").hidden, true);
-  assert.equal(doc.getElementById("desktop-shop").hidden, false);
-  shop.focus();
+  assert.equal(doc.getElementById("desktop-services").hidden, false);
+  services.focus();
   doc.querySelector('.desktop-nav > a[href="baza-wiedzy"]').focus();
-  assert.equal(doc.getElementById("desktop-shop").hidden, true);
+  assert.equal(doc.getElementById("desktop-services").hidden, true);
   services.click();
   doc.querySelector("h1").click();
   assert.equal(doc.getElementById("desktop-services").hidden, true);
@@ -100,10 +100,10 @@ test("calculator/contact anchor navigation closes mobile menu and focuses origin
 test("switching viewport closes mobile menu and all nested panels", (t) => {
   const { doc, media } = setup(t);
   doc.querySelector(".menu-toggle").click();
-  doc.querySelector('[aria-controls="mobile-shop"]').click();
+  doc.querySelector('[aria-controls="mobile-services"]').click();
   media.dispatchEvent(new doc.defaultView.Event("change"));
   assert.equal(doc.getElementById("mobile-navigation").hidden, true);
-  assert.equal(doc.getElementById("mobile-shop").hidden, true);
+  assert.equal(doc.getElementById("mobile-services").hidden, true);
   assert.equal(doc.body.classList.contains("menu-open"), false);
 });
 
@@ -113,7 +113,7 @@ test("future links preserve the Pages prefix, match between menus, and do not br
     .filter((link) => !link.hash && link.protocol === "https:");
   const desktop = futureLinks(".desktop-nav");
   const mobile = futureLinks(".mobile-nav");
-  assert.equal(desktop.length, 12);
+  assert.equal(desktop.length, 9);
   assert.deepEqual(desktop.map((link) => link.href), mobile.map((link) => link.href));
   for (const link of desktop) {
     assert.ok(link.pathname.startsWith("/nowy-ui-omega/"));

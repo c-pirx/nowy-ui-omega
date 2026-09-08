@@ -2646,5 +2646,13 @@ button:disabled {
 }
 
 .content-page { max-width: 900px; }
-.content-page h1 { margin-bottom: 28px; }
+.content-page h1 { margin-bottom: 28px; font-size: clamp(32px, 3.4vw, 44px); color: var(--brown); }
+.header-cart { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex-shrink: 0; color: var(--ink); }
+.header-cart:hover, .header-cart:focus-visible { color: var(--red); }
+.header-cart svg { width: 22px; height: 22px; }
+.header-cart .cart-count { position: absolute; top: 1px; right: -2px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-family: Poppins, sans-serif; font-size: 10px; font-weight: 500; line-height: 18px; text-align: center; }
+.header-cart[data-count="0"] .cart-count { display: none; }
+.desktop-nav .header-cart { margin-left: -6px; }
+.header-inner > .header-cart { display: none; }
+@media (max-width: 1023px) { .header-inner > .header-cart { display: inline-flex; margin-left: -6px; } }
 .entry-content > * + * { margin-top: 1.25em; }
