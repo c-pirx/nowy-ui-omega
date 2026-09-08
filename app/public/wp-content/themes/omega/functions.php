@@ -98,6 +98,13 @@ function omega_empty_cart_block( $content ) {
 }
 add_filter( 'render_block_woocommerce/empty-cart-block', 'omega_empty_cart_block' );
 
+// Kasa: krótka informacja nad formularzem, że produkt trafi automatycznie na e-mail. Nie na stronie potwierdzenia ani przy pustym koszyku.
+function omega_checkout_badge( $content ) {
+	if ( is_wc_endpoint_url( 'order-received' ) || ! WC()->cart || WC()->cart->is_empty() ) return $content;
+	return '<p class="checkout-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7.5 9 6 9-6" /></svg><span>Po opłaceniu produkt trafi automatycznie na podany adres e-mail.</span></p>' . $content;
+}
+add_filter( 'render_block_woocommerce/checkout', 'omega_checkout_badge' );
+
 // Ikona koszyka w nagłówku: zawsze w sklepie, poza nim tylko gdy koszyk nie jest pusty.
 // Po najechaniu lub fokusie rozwija się mini-koszyk; na stronach koszyka i zamówienia jest zbędny.
 function omega_cart_link() {
