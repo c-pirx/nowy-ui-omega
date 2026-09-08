@@ -1,6 +1,6 @@
 # Omega MG — redesign
 
-Gotowy frontend w HTML, CSS i JavaScript, z lokalnym podglądem oraz odwracalnym adapterem do istniejącego WordPressa. Źródło treści i materiałów: [omega-mg.pl](https://omega-mg.pl/), stan odczytany 8 września 2026 (czas polski).
+Gotowy frontend w HTML, CSS i JavaScript oraz samodzielny motyw i wtyczka WordPress. Źródło treści i materiałów: [omega-mg.pl](https://omega-mg.pl/), stan odczytany 8 września 2026 (czas polski).
 
 ## Uruchomienie
 
@@ -15,7 +15,8 @@ Podgląd: <http://localhost:4173>. Serwer jest dostępny wyłącznie lokalnie.
 ```sh
 npm ci
 npm test
-npm run package:wordpress
+npm run build:wordpress
+npm run package:local
 ```
 
 ## Lokalne środowisko WordPress
@@ -26,10 +27,15 @@ W LocalWP jako ścieżkę witryny ustaw katalog repozytorium:
 kolidują z katalogiem `public/`, który nadal zawiera statyczny frontend
 publikowany przez GitHub Pages.
 
-Własny motyw rozwijamy w
-`app/public/wp-content/themes/omega-mg/`. Git śledzi wyłącznie ten motyw;
-rdzeń WordPressa, baza danych, konfiguracja środowiska, media oraz cudze
-wtyczki i motywy pozostają lokalne.
+Motyw rozwijamy w `app/public/wp-content/themes/omega/`, a funkcje niezależne
+od wyglądu w `app/public/wp-content/plugins/omega-core/`. Git śledzi wyłącznie
+te dwa katalogi; rdzeń WordPressa, baza danych, konfiguracja środowiska, media
+oraz cudze wtyczki i motywy pozostają lokalne.
+
+Po zmianie źródłowego frontendu uruchom `npm run build:wordpress`. Polecenie
+odtwarza szablony i assety motywu oraz frontend kalkulatora. Gotowe paczki
+instalacyjne tworzy `npm run package:local` jako `dist/omega.zip` i
+`dist/omega-core.zip`.
 
 ## Pliki
 
@@ -38,25 +44,29 @@ wtyczki i motywy pozostają lokalne.
 - `public/app.js` — nawigacja, logotypy i dostępny panel certyfikacji.
 - `public/calculator.js` — zachowana logika wyceny, walidacja i integracja wysyłki.
 - `public/assets` — oryginalne obrazy, logo i lokalne fonty.
-- `dist/omega-mg-redesign.zip` — paczka wtyczki WordPress.
+- `app/public/wp-content/themes/omega` — aktywny motyw LocalWP.
+- `app/public/wp-content/plugins/omega-core` — kalkulator, e-mail i SMTP.
+- `dist/omega.zip` oraz `dist/omega-core.zip` — samodzielne paczki instalacyjne.
 - `research/asset-manifest.json` — pochodzenie i sumy kontrolne materiałów.
 - `research/wordpress-notes.md` — instalacja, przywrócenie starego widoku i ograniczenia integracji.
 - `QA.md` — zakres przeprowadzonej weryfikacji.
 
 ## WordPress i kalkulator
 
-Wtyczka jest domyślnie wyłączona. Zmienia wyłącznie szablon strony głównej po włączeniu opcji w **Ustawienia → Omega MG — redesign**. Nie zmienia treści w bazie, Astry, Elementora, polityki prywatności ani backendu kalkulatora. Dezaktywacja przywraca oryginalny widok.
+Motyw `omega` odwzorowuje statyczny frontend 1:1. Treści strony pozostają w kodzie. Kalkulator jest osadzany przez shortcode `[omega_calculator]` i działa dzięki osobnej wtyczce `omega-core`. Po jej dezaktywacji strona nadal działa i pokazuje komunikat o niedostępności kalkulatora.
 
 Kalkulator najpierw anonimowo pokazuje orientacyjną cenę w formacie **„od 650 zł netto/mies.”** (kwota zależy od danych, stawki nie zostały zmienione). Obliczenie nie wysyła żądania. Przycisk **„Wyślij wynik do potwierdzenia”** otwiera formularz: imię, telefon, e-mail i opcjonalna wiadomość do 3000 znaków, wraz z dotychczasową zgodą. **„Zmień dane”** przywraca parametry do edycji. Dopiero zatwierdzenie formularza wysyła wynik, jego parametry i wiadomość.
 
 Przed obliczeniem należy zaznaczyć domyślnie niezaznaczony checkbox „Zapoznałem/-am się z Polityką prywatności”, z linkiem do oryginalnej polityki. Potwierdzenie nie zaznacza automatycznie osobnej zgody na przetwarzanie danych przy wysyłce kontaktu.
 
-Na WordPressie stawki, nonce i adres AJAX pochodzą z aktualnej konfiguracji istniejącej wtyczki `omega-kalkulator`. Jej endpoint nadal odpowiada za walidację i wysyłkę. Adapter dopisuje wiadomość i orientacyjne podsumowanie do e-maila przez filtr `wp_mail`, wyłącznie dla nowych zgłoszeń oznaczonych przez ten formularz. Bez aktualnej konfiguracji lub adaptera wysyłka informuje o niedostępności.
+Stawki oraz ustawienia poczty są dostępne w **Ustawienia → Omega Core**. Backend ponownie wylicza cenę z zapisanych stawek, więc nie ufa kwocie przesłanej z przeglądarki. Formularz sprawdza nonce, dane, obie zgody, honeypot i limit liczby wysyłek. Wiadomość zawiera kontakt, parametry wyceny, wynik serwerowy i opcjonalną wiadomość klienta.
 
-Na `localhost`, `127.0.0.1` oraz statycznym GitHub Pages bez konfiguracji WordPressa kalkulator oblicza wycenę ze źródłowych stawek, ale **nigdy nie wysyła zapytania**. Próba zatwierdzenia formularza jasno informuje o trybie podglądu. Lokalny katalog nie zawiera instalacji WordPressa ani źródeł prywatnego backendu; rzeczywiste dostarczenie e-maila wraz z wiadomością wymaga testu na kopii działającej witryny.
+Domyślny transport WordPressa trafia w LocalWP do Mailpit. Opcjonalnie można podać własny SMTP: host, port, szyfrowanie, uwierzytelnianie, login i hasło. Puste pole hasła zachowuje poprzednią wartość. Przycisk wiadomości testowej znajduje się na tej samej stronie ustawień.
+
+Na `localhost`, `127.0.0.1` oraz statycznym GitHub Pages bez konfiguracji WordPressa kalkulator oblicza wycenę ze źródłowych stawek, ale nie wysyła zapytania. W LocalWP pod domeną `omega-new.local` korzysta z backendu `omega-core`.
 
 Strzałki na całej stronie są ikonami SVG z kolorem `currentColor`, więc nie zmieniają się w emoji na urządzeniach mobilnych. Zależność `jsdom` służy wyłącznie testom formularza; frontend i pakowanie WordPressa nie wymagają bibliotek runtime.
 
-Treść nowego widoku znajduje się w pliku HTML. Późniejsze zmiany tekstów w Elementorze nie synchronizują się automatycznie z tym szablonem. Dane C.I.K. zachowują treść odczytanego widgetu; panel zawiera odnośnik do aktualnego certyfikatu.
+Źródłowa treść widoku znajduje się w pliku HTML, a generator przenosi ją do szablonów PHP. Dane C.I.K. zachowują treść odczytanego widgetu; panel zawiera odnośnik do aktualnego certyfikatu.
 
 Witryna produkcyjna nie została zmodyfikowana.
