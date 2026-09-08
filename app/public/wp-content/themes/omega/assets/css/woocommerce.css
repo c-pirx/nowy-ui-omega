@@ -348,7 +348,7 @@ ul.products .added_to_cart {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin: -8px 0 28px;
+  margin: -8px 0 0;
   padding: 9px 14px 9px 12px;
   background: var(--warm);
   border: 1px solid var(--line);
@@ -362,6 +362,16 @@ ul.products .added_to_cart {
   width: 18px;
   height: 18px;
   color: var(--red);
+}
+/* Blok kasy ma własny górny margines i padding; po badge'u zostaje tylko krótki odstęp. */
+.checkout-badge + .wp-block-woocommerce-checkout {
+  margin-top: 24px;
+  padding-top: 0;
+}
+@media (max-width: 767px) {
+  .checkout-badge + .wp-block-woocommerce-checkout {
+    margin-top: 12px;
+  }
 }
 .woocommerce-page .wc-block-components-button,
 .woocommerce-page .wp-block-button__link {
