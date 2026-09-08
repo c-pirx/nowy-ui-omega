@@ -213,7 +213,15 @@ export function initCalculator() {
     event.preventDefault();
     if (busy || form.hidden) return;
     if (
-      !validate(numericFields.map((suffix) => [suffix, numericError(suffix)]))
+      !validate([
+        ...numericFields.map((suffix) => [suffix, numericError(suffix)]),
+        [
+          "policy",
+          field("policy").checked
+            ? ""
+            : "Potwierdź zapoznanie się z polityką prywatności.",
+        ],
+      ])
     )
       return;
     enforceAccountingOptions();
@@ -431,7 +439,7 @@ export function initCalculator() {
     if (busy) return;
     invalidateQuote();
     const suffix = event.target.id?.replace("omega-kalk-", "");
-    if (numericFields.includes(suffix)) setError(suffix, "");
+    if ([...numericFields, "policy"].includes(suffix)) setError(suffix, "");
   });
   form.addEventListener("change", () => {
     if (!busy) {
@@ -452,7 +460,7 @@ export function initCalculator() {
     }
     invalidateQuote();
     contact.reset();
-    for (const suffix of [...numericFields, ...contactFields])
+    for (const suffix of [...numericFields, "policy", ...contactFields])
       setError(suffix, "");
     // Wait until the browser performs reset's native default action.
     setTimeout(() => {

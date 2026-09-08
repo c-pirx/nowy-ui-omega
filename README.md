@@ -36,6 +36,8 @@ Wtyczka jest domyślnie wyłączona. Zmienia wyłącznie szablon strony główne
 
 Kalkulator najpierw anonimowo pokazuje orientacyjną cenę w formacie **„od 650 zł netto/mies.”** (kwota zależy od danych, stawki nie zostały zmienione). Obliczenie nie wysyła żądania. Przycisk **„Wyślij wynik do potwierdzenia”** otwiera formularz: imię, telefon, e-mail i opcjonalna wiadomość do 3000 znaków, wraz z dotychczasową zgodą. **„Zmień dane”** przywraca parametry do edycji. Dopiero zatwierdzenie formularza wysyła wynik, jego parametry i wiadomość.
 
+Przed obliczeniem należy zaznaczyć domyślnie niezaznaczony checkbox „Zapoznałem/-am się z Polityką prywatności”, z linkiem do oryginalnej polityki. Potwierdzenie nie zaznacza automatycznie osobnej zgody na przetwarzanie danych przy wysyłce kontaktu.
+
 Na WordPressie stawki, nonce i adres AJAX pochodzą z aktualnej konfiguracji istniejącej wtyczki `omega-kalkulator`. Jej endpoint nadal odpowiada za walidację i wysyłkę. Adapter dopisuje wiadomość i orientacyjne podsumowanie do e-maila przez filtr `wp_mail`, wyłącznie dla nowych zgłoszeń oznaczonych przez ten formularz. Bez aktualnej konfiguracji lub adaptera wysyłka informuje o niedostępności.
 
 Na `localhost`, `127.0.0.1` oraz statycznym GitHub Pages bez konfiguracji WordPressa kalkulator oblicza wycenę ze źródłowych stawek, ale **nigdy nie wysyła zapytania**. Próba zatwierdzenia formularza jasno informuje o trybie podglądu. Lokalny katalog nie zawiera instalacji WordPressa ani źródeł prywatnego backendu; rzeczywiste dostarczenie e-maila wraz z wiadomością wymaga testu na kopii działającej witryny.

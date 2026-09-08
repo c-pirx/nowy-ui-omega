@@ -12,7 +12,12 @@ const settle = () => new Promise((resolve) => setTimeout(resolve, 5));
 
 function setup(
   t,
-  { url = "https://quote.example/", backend = true, response } = {},
+  {
+    url = "https://quote.example/",
+    backend = true,
+    policyAccepted = true,
+    response,
+  } = {},
 ) {
   const dom = new JSDOM(html, { url });
   for (const [name, value] of Object.entries({
@@ -51,6 +56,7 @@ function setup(
   const { form, contact } = initCalculator();
   const field = (suffix) =>
     dom.window.document.getElementById(`omega-kalk-${suffix}`);
+  field("policy").checked = policyAccepted;
   const submit = (target) =>
     target.dispatchEvent(
       new dom.window.Event("submit", { bubbles: true, cancelable: true }),
@@ -66,6 +72,29 @@ function setup(
   };
   return { dom, form, contact, field, submit, fillContact, requests };
 }
+
+test("privacy acknowledgement is unchecked by default, required for calculation, and separate from contact consent", (t) => {
+  const { form, field, submit, requests } = setup(t, { policyAccepted: false });
+  assert.equal(field("policy").defaultChecked, false);
+  assert.equal(field("policy").required, true);
+  assert.equal(
+    field("policy").closest("label").querySelector("a").href,
+    "https://omega-mg.pl/polityka-prywatnosci/",
+  );
+  submit(form);
+  assert.equal(field("result").hidden, true);
+  assert.equal(field("policy").getAttribute("aria-invalid"), "true");
+  assert.equal(document.activeElement, field("policy"));
+  field("policy").click();
+  assert.equal(field("policy").getAttribute("aria-invalid"), "false");
+  submit(form);
+  assert.equal(field("result").hidden, false);
+  assert.equal(field("privacy").checked, false);
+  assert.equal(requests.length, 0);
+  field("edit").click();
+  form.reset();
+  assert.equal(field("policy").checked, false);
+});
 
 test("anonymous quote shows a monthly indicative price before asking for contact, with zero requests", (t) => {
   const { form, contact, field, submit, requests } = setup(t);
