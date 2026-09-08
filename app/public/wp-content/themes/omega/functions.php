@@ -84,7 +84,7 @@ add_action( 'wp_enqueue_scripts', 'omega_woocommerce_assets', 20 );
 
 // Pusty koszyk: własna treść zamiast domyślnej ikonki i siatki bloku WooCommerce.
 function omega_empty_cart_block( $content ) {
-	$arrow  = '<span aria-hidden="true"><svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14" /></svg></span>';
+	$arrow  = omega_arrow();
 	$markup = '<section class="empty-cart">'
 		. '<div class="empty-cart-intro"><p class="eyebrow"><span class="eyebrow-line"></span>Sklep Omega MG</p>'
 		. '<h2>Twój koszyk jest pusty<span class="red-dot">.</span></h2>'
@@ -176,3 +176,61 @@ function omega_cart_live_count() {
 	<?php
 }
 add_action( 'wp_footer', 'omega_cart_live_count', 100 );
+
+// Strzałka zamykająca każdy przycisk i link tekstowy, ta sama co w statycznym markupie.
+function omega_arrow() {
+	return '<span aria-hidden="true"><svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14" /></svg></span>';
+}
+
+// Baza wiedzy: wpisy WordPressa renderują index.php i single.php, style w blog.css ładowanym tylko tam.
+function omega_blog_assets() {
+	if ( ! ( is_home() || is_singular( 'post' ) || is_category() || is_tag() || is_author() || is_date() || is_search() ) ) return;
+	$css = get_theme_file_path( '/assets/css/blog.css' );
+	wp_enqueue_style( 'omega-blog', get_theme_file_uri( '/assets/css/blog.css' ), array( 'omega-site' ), (string) filemtime( $css ) );
+}
+add_action( 'wp_enqueue_scripts', 'omega_blog_assets', 20 );
+add_filter( 'excerpt_length', function() { return 24; } );
+add_filter( 'excerpt_more', function() { return '…'; } );
+
+function omega_kb_page_url() {
+	$page = (int) get_option( 'page_for_posts' );
+	return $page ? get_permalink( $page ) : home_url( '/baza-wiedzy/' );
+}
+
+function omega_reading_time() {
+	$words = count( preg_split( '/\s+/u', trim( wp_strip_all_tags( get_the_content() ) ) ) );
+	return sprintf( '%d min czytania', max( 1, (int) round( $words / 200 ) ) );
+}
+
+// Okruszki: Start / Baza wiedzy / bieżąca kategoria. Bez etykiety „Baza wiedzy” jest ostatnim elementem.
+function omega_kb_breadcrumb( $label = '', $url = '' ) {
+	$sep = '<span aria-hidden="true">/</span>';
+	echo '<nav class="eyebrow kb-breadcrumb" aria-label="Okruszki"><a href="' . esc_url( home_url( '/' ) ) . '">Start</a>' . $sep;
+	if ( '' === $label ) {
+		echo '<span aria-current="page">Baza wiedzy</span></nav>';
+		return;
+	}
+	echo '<a href="' . esc_url( omega_kb_page_url() ) . '">Baza wiedzy</a>' . $sep;
+	echo $url ? '<a href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a>' : '<span aria-current="page">' . esc_html( $label ) . '</span>';
+	echo '</nav>';
+}
+
+// Karta artykułu na liście, w wynikach wyszukiwania i w sekcji „Czytaj także”.
+function omega_post_card( $featured = false ) {
+	$link       = get_permalink();
+	$categories = get_the_category();
+	$category   = $categories ? $categories[0] : null;
+	echo '<article class="kb-card' . ( $featured ? ' kb-card-featured' : '' ) . '">';
+	echo '<a class="kb-card-media" href="' . esc_url( $link ) . '" tabindex="-1" aria-hidden="true">';
+	if ( has_post_thumbnail() ) {
+		the_post_thumbnail( $featured ? 'large' : 'medium_large' );
+	} else {
+		echo '<span class="kb-card-placeholder">' . esc_html( mb_substr( $category ? $category->name : get_the_title(), 0, 1 ) ) . '</span>';
+	}
+	echo '</a><div class="kb-card-body"><p class="eyebrow">';
+	if ( $category ) echo '<a href="' . esc_url( get_category_link( $category ) ) . '">' . esc_html( $category->name ) . '</a><span aria-hidden="true">·</span>';
+	echo '<time datetime="' . esc_attr( get_the_date( 'c' ) ) . '">' . esc_html( get_the_date() ) . '</time></p>';
+	echo '<h3><a href="' . esc_url( $link ) . '">' . esc_html( get_the_title() ) . '</a></h3>';
+	echo '<p>' . esc_html( get_the_excerpt() ) . '</p>';
+	echo '<a class="text-link" href="' . esc_url( $link ) . '">Czytaj artykuł' . omega_arrow() . '</a></div></article>';
+}

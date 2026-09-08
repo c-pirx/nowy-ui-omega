@@ -92,6 +92,10 @@ function initEntranceMotion() {
   register(".why-list li", 45);
   register(".calculator-intro, .clients-heading, .contact-top");
   register(".client-logos, .contact-grid > div", 65);
+  // Baza wiedzy (WordPress): selektory bez trafień na statycznej stronie są nieszkodliwe.
+  register(".kb-heading, .kb-toolbar, .kb-hero, .kb-cover, .kb-cta-inner > div");
+  register(".kb-card", 55);
+  register(".kb-adjacent > div, .kb-cta-actions", 65);
 
   const observer = new IntersectionObserver(
     (entries) => {

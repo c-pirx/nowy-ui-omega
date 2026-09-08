@@ -14,6 +14,9 @@ final class Omega_Core {
 		add_action( 'admin_post_omega_core_test_email', array( __CLASS__, 'test_email' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'admin_notice' ) );
 		add_filter( 'script_loader_tag', array( __CLASS__, 'module_script' ), 10, 3 );
+		// Wpisy WordPressa są bazą wiedzy: etykiety w edytorze, pasku admina i menu panelu.
+		add_filter( 'post_type_labels_post', array( __CLASS__, 'kb_labels' ) );
+		add_action( 'admin_menu', array( __CLASS__, 'kb_menu' ) );
 	}
 
 	public static function defaults() {
@@ -184,6 +187,39 @@ final class Omega_Core {
 	}
 
 	public static function admin_menu() { add_options_page( 'Omega Core', 'Omega Core', 'manage_options', 'omega-core', array( __CLASS__, 'settings_page' ) ); }
+
+	public static function kb_labels( $labels ) {
+		$custom = array(
+			'name'               => 'Baza wiedzy',
+			'singular_name'      => 'Artykuł',
+			'menu_name'          => 'Baza wiedzy',
+			'name_admin_bar'     => 'Artykuł',
+			'all_items'          => 'Wszystkie artykuły',
+			'add_new'            => 'Dodaj artykuł',
+			'add_new_item'       => 'Dodaj nowy artykuł',
+			'edit_item'          => 'Edytuj artykuł',
+			'new_item'           => 'Nowy artykuł',
+			'view_item'          => 'Zobacz artykuł',
+			'view_items'         => 'Zobacz artykuły',
+			'search_items'       => 'Szukaj artykułów',
+			'not_found'          => 'Nie znaleziono artykułów.',
+			'not_found_in_trash' => 'Brak artykułów w koszu.',
+			'item_published'     => 'Artykuł opublikowany.',
+			'item_updated'       => 'Artykuł zaktualizowany.',
+		);
+		foreach ( $custom as $key => $value ) {
+			$labels->$key = $value;
+		}
+		return $labels;
+	}
+
+	// wp-admin/menu.php ma „Wpisy” wpisane na sztywno, więc etykiety typu wpisu nie wystarczą.
+	public static function kb_menu() {
+		global $menu, $submenu;
+		if ( isset( $menu[5][0] ) ) $menu[5][0] = 'Baza wiedzy';
+		if ( isset( $submenu['edit.php'][5][0] ) ) $submenu['edit.php'][5][0] = 'Wszystkie artykuły';
+		if ( isset( $submenu['edit.php'][10][0] ) ) $submenu['edit.php'][10][0] = 'Dodaj artykuł';
+	}
 	private static function field( $key, $label, $type = 'number' ) {
 		$s = self::settings(); $step = 'number' === $type ? ' step="0.01" min="0"' : '';
 		printf( '<tr><th scope="row"><label for="omega-%1$s">%2$s</label></th><td><input class="regular-text" id="omega-%1$s" name="%3$s[%1$s]" type="%4$s" value="%5$s"%6$s></td></tr>', esc_attr( $key ), esc_html( $label ), esc_attr( self::OPTION ), esc_attr( $type ), 'password' === $type ? '' : esc_attr( $s[ $key ] ), $step );

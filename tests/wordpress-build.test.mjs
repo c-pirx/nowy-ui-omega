@@ -29,6 +29,23 @@ test("WordPress theme is native, self-contained and keeps the approved sections"
   assert.match(footer, /wp_footer\(\)/);
   assert.doesNotMatch(main, /initCalculator|calculator\.js/);
   assert.match(main, /if \(logos && prev && next\)/);
+  // Baza wiedzy: lista w index.php, artykuł w single.php, style tylko na tych stronach.
+  const [index, single, blogCss] = await Promise.all([
+    read("app/public/wp-content/themes/omega/index.php"),
+    read("app/public/wp-content/themes/omega/single.php"),
+    read("app/public/wp-content/themes/omega/assets/css/blog.css"),
+  ]);
+  assert.match(index, /omega_post_card\(/);
+  assert.match(index, /the_posts_pagination\(/);
+  assert.match(index, /name="post_type" value="post"/);
+  assert.match(single, /the_content\(\)/);
+  assert.match(single, /kb-related/);
+  assert.doesNotMatch(single, /comments_template/);
+  assert.match(functions, /wp_enqueue_style\( 'omega-blog'.*blog\.css/);
+  assert.match(functions, /function omega_post_card/);
+  assert.match(main, /\.kb-card/);
+  for (const selector of [".kb-card-featured", ".kb-categories", ".kb-content", ".kb-adjacent"])
+    assert.match(blogCss, new RegExp(selector.replace(".", "\\.") + "\\s*[{,]"));
 });
 
 test("Omega Core owns calculator UI, server validation and SMTP settings", async () => {
@@ -44,4 +61,7 @@ test("Omega Core owns calculator UI, server validation and SMTP settings", async
   for (const marker of ["check_ajax_referer", "self::calculate", "get_transient", "phpmailer_init", "smtp_password"])
     assert.match(plugin, new RegExp(marker.replace("::", "\\:\\:")));
   assert.doesNotMatch(plugin, /omega-mg-redesign|omega-kalkulator/);
+  // Wpisy w panelu nazywają się „Baza wiedzy”.
+  assert.match(plugin, /post_type_labels_post/);
+  assert.match(plugin, /\$menu\[5\]\[0\] = 'Baza wiedzy'/);
 });

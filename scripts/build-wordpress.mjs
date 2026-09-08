@@ -164,7 +164,7 @@ add_action( 'wp_enqueue_scripts', 'omega_woocommerce_assets', 20 );
 
 // Pusty koszyk: własna treść zamiast domyślnej ikonki i siatki bloku WooCommerce.
 function omega_empty_cart_block( $content ) {
-\t$arrow  = '<span aria-hidden="true"><svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14" /></svg></span>';
+\t$arrow  = omega_arrow();
 \t$markup = '<section class="empty-cart">'
 \t\t. '<div class="empty-cart-intro"><p class="eyebrow"><span class="eyebrow-line"></span>Sklep Omega MG</p>'
 \t\t. '<h2>Twój koszyk jest pusty<span class="red-dot">.</span></h2>'
@@ -256,6 +256,64 @@ function omega_cart_live_count() {
 \t<?php
 }
 add_action( 'wp_footer', 'omega_cart_live_count', 100 );
+
+// Strzałka zamykająca każdy przycisk i link tekstowy, ta sama co w statycznym markupie.
+function omega_arrow() {
+\treturn '<span aria-hidden="true"><svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14" /></svg></span>';
+}
+
+// Baza wiedzy: wpisy WordPressa renderują index.php i single.php, style w blog.css ładowanym tylko tam.
+function omega_blog_assets() {
+\tif ( ! ( is_home() || is_singular( 'post' ) || is_category() || is_tag() || is_author() || is_date() || is_search() ) ) return;
+\t$css = get_theme_file_path( '/assets/css/blog.css' );
+\twp_enqueue_style( 'omega-blog', get_theme_file_uri( '/assets/css/blog.css' ), array( 'omega-site' ), (string) filemtime( $css ) );
+}
+add_action( 'wp_enqueue_scripts', 'omega_blog_assets', 20 );
+add_filter( 'excerpt_length', function() { return 24; } );
+add_filter( 'excerpt_more', function() { return '…'; } );
+
+function omega_kb_page_url() {
+\t$page = (int) get_option( 'page_for_posts' );
+\treturn $page ? get_permalink( $page ) : home_url( '/baza-wiedzy/' );
+}
+
+function omega_reading_time() {
+\t$words = count( preg_split( '/\\s+/u', trim( wp_strip_all_tags( get_the_content() ) ) ) );
+\treturn sprintf( '%d min czytania', max( 1, (int) round( $words / 200 ) ) );
+}
+
+// Okruszki: Start / Baza wiedzy / bieżąca kategoria. Bez etykiety „Baza wiedzy” jest ostatnim elementem.
+function omega_kb_breadcrumb( $label = '', $url = '' ) {
+\t$sep = '<span aria-hidden="true">/</span>';
+\techo '<nav class="eyebrow kb-breadcrumb" aria-label="Okruszki"><a href="' . esc_url( home_url( '/' ) ) . '">Start</a>' . $sep;
+\tif ( '' === $label ) {
+\t\techo '<span aria-current="page">Baza wiedzy</span></nav>';
+\t\treturn;
+\t}
+\techo '<a href="' . esc_url( omega_kb_page_url() ) . '">Baza wiedzy</a>' . $sep;
+\techo $url ? '<a href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a>' : '<span aria-current="page">' . esc_html( $label ) . '</span>';
+\techo '</nav>';
+}
+
+// Karta artykułu na liście, w wynikach wyszukiwania i w sekcji „Czytaj także”.
+function omega_post_card( $featured = false ) {
+\t$link       = get_permalink();
+\t$categories = get_the_category();
+\t$category   = $categories ? $categories[0] : null;
+\techo '<article class="kb-card' . ( $featured ? ' kb-card-featured' : '' ) . '">';
+\techo '<a class="kb-card-media" href="' . esc_url( $link ) . '" tabindex="-1" aria-hidden="true">';
+\tif ( has_post_thumbnail() ) {
+\t\tthe_post_thumbnail( $featured ? 'large' : 'medium_large' );
+\t} else {
+\t\techo '<span class="kb-card-placeholder">' . esc_html( mb_substr( $category ? $category->name : get_the_title(), 0, 1 ) ) . '</span>';
+\t}
+\techo '</a><div class="kb-card-body"><p class="eyebrow">';
+\tif ( $category ) echo '<a href="' . esc_url( get_category_link( $category ) ) . '">' . esc_html( $category->name ) . '</a><span aria-hidden="true">·</span>';
+\techo '<time datetime="' . esc_attr( get_the_date( 'c' ) ) . '">' . esc_html( get_the_date() ) . '</time></p>';
+\techo '<h3><a href="' . esc_url( $link ) . '">' . esc_html( get_the_title() ) . '</a></h3>';
+\techo '<p>' . esc_html( get_the_excerpt() ) . '</p>';
+\techo '<a class="text-link" href="' . esc_url( $link ) . '">Czytaj artykuł' . omega_arrow() . '</a></div></article>';
+}
 `;
 
 const woocommercePhp = `<?php get_header(); ?>
@@ -284,6 +342,141 @@ const woocommercePhp = `<?php get_header(); ?>
 \t\t<?php endif; ?>
 \t\t<?php woocommerce_content(); ?>
 \t</div>
+</main>
+<?php get_footer(); ?>
+`;
+
+// Lista bazy wiedzy: strona wpisów, kategorie, tagi, autor, data i wyszukiwanie (index.php jest dla nich fallbackiem).
+const blogIndexPhp = `<?php
+get_header();
+$omega_title = 'Baza wiedzy';
+$omega_crumb = '';
+$omega_description = '';
+if ( is_home() ) {
+\t$omega_page = (int) get_option( 'page_for_posts' );
+\tif ( $omega_page ) {
+\t\t$omega_title       = get_the_title( $omega_page );
+\t\t$omega_description = apply_filters( 'the_content', get_post_field( 'post_content', $omega_page ) );
+\t}
+} elseif ( is_category() || is_tag() ) {
+\t$omega_title       = single_term_title( '', false );
+\t$omega_crumb       = $omega_title;
+\t$omega_description = term_description();
+} elseif ( is_search() ) {
+\t$omega_title       = 'Wyniki wyszukiwania';
+\t$omega_crumb       = 'Szukaj';
+\t$omega_description = '<p>' . sprintf( 'Fraza „%s”, znalezione artykuły: %d.', esc_html( get_search_query() ), (int) $wp_query->found_posts ) . '</p>';
+} else {
+\t$omega_title       = wp_strip_all_tags( get_the_archive_title() );
+\t$omega_crumb       = $omega_title;
+\t$omega_description = get_the_archive_description();
+}
+?>
+<main id="content" class="section kb-page">
+\t<div class="container">
+\t\t<header class="kb-heading">
+\t\t\t<div>
+\t\t\t\t<?php omega_kb_breadcrumb( $omega_crumb ); ?>
+\t\t\t\t<h1><?php echo esc_html( $omega_title ); ?><span class="red-dot">.</span></h1>
+\t\t\t</div>
+\t\t\t<?php if ( '' !== trim( wp_strip_all_tags( $omega_description ) ) ) echo '<div class="kb-description">' . wp_kses_post( $omega_description ) . '</div>'; ?>
+\t\t</header>
+\t\t<div class="kb-toolbar">
+\t\t\t<nav class="kb-categories" aria-label="Kategorie">
+\t\t\t\t<a href="<?php echo esc_url( omega_kb_page_url() ); ?>"<?php if ( is_home() ) echo ' aria-current="page"'; ?>>Wszystkie</a>
+\t\t\t\t<?php foreach ( get_terms( array( 'taxonomy' => 'category', 'hide_empty' => true ) ) as $omega_term ) : ?>
+\t\t\t\t<a href="<?php echo esc_url( get_term_link( $omega_term ) ); ?>"<?php if ( is_category( $omega_term->term_id ) ) echo ' aria-current="page"'; ?>><?php echo esc_html( $omega_term->name ); ?></a>
+\t\t\t\t<?php endforeach; ?>
+\t\t\t</nav>
+\t\t\t<form class="kb-search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+\t\t\t\t<input type="search" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="Szukaj w bazie wiedzy" aria-label="Szukaj w bazie wiedzy">
+\t\t\t\t<input type="hidden" name="post_type" value="post">
+\t\t\t\t<button type="submit" aria-label="Szukaj"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg></button>
+\t\t\t</form>
+\t\t</div>
+\t\t<script>document.querySelectorAll( '.kb-categories' ).forEach( function ( nav ) { var active = nav.querySelector( '[aria-current]' ); if ( active ) nav.scrollLeft = active.offsetLeft; } );</script>
+\t\t<?php if ( have_posts() ) : ?>
+\t\t<div class="kb-grid">
+\t\t\t<?php while ( have_posts() ) : the_post(); omega_post_card( is_home() && ! is_paged() && 0 === $wp_query->current_post ); endwhile; ?>
+\t\t</div>
+\t\t<?php the_posts_pagination( array( 'mid_size' => 1, 'prev_text' => 'Nowsze artykuły' . omega_arrow(), 'next_text' => 'Starsze artykuły' . omega_arrow(), 'screen_reader_text' => 'Strony bazy wiedzy', 'aria_label' => 'Strony bazy wiedzy' ) ); ?>
+\t\t<?php else : ?>
+\t\t<div class="kb-empty">
+\t\t\t<p>Nic tu jeszcze nie ma. Spróbuj innej frazy albo przejrzyj wszystkie artykuły.</p>
+\t\t\t<a class="text-link" href="<?php echo esc_url( omega_kb_page_url() ); ?>">Wszystkie artykuły<?php echo omega_arrow(); ?></a>
+\t\t</div>
+\t\t<?php endif; ?>
+\t</div>
+</main>
+<?php get_footer(); ?>
+`;
+
+const singlePhp = `<?php
+get_header();
+the_post();
+$omega_categories = get_the_category();
+$omega_category   = $omega_categories ? $omega_categories[0] : null;
+?>
+<main id="content" class="kb-single">
+\t<article <?php post_class( 'kb-article' ); ?>>
+\t\t<header class="kb-hero">
+\t\t\t<div class="container">
+\t\t\t\t<?php omega_kb_breadcrumb( $omega_category ? $omega_category->name : '', $omega_category ? get_category_link( $omega_category ) : '' ); ?>
+\t\t\t\t<h1><?php the_title(); ?><span class="red-dot">.</span></h1>
+\t\t\t\t<p class="kb-meta">
+\t\t\t\t\t<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
+\t\t\t\t\t<span aria-hidden="true">·</span><span><?php echo esc_html( omega_reading_time() ); ?></span>
+\t\t\t\t\t<?php if ( $omega_categories ) : ?><span aria-hidden="true">·</span><span><?php echo wp_kses_post( get_the_category_list( ', ' ) ); ?></span><?php endif; ?>
+\t\t\t\t</p>
+\t\t\t\t<?php if ( has_excerpt() ) : ?><p class="kb-lead"><?php echo esc_html( get_the_excerpt() ); ?></p><?php endif; ?>
+\t\t\t</div>
+\t\t</header>
+\t\t<?php if ( has_post_thumbnail() ) : ?>
+\t\t<div class="container kb-cover"><?php the_post_thumbnail( 'large' ); ?></div>
+\t\t<?php endif; ?>
+\t\t<div class="container kb-body">
+\t\t\t<div class="entry-content kb-content"><?php the_content(); ?></div>
+\t\t\t<?php the_tags( '<p class="kb-tags"><span class="eyebrow">Tagi</span>', '', '</p>' ); ?>
+\t\t\t<nav class="kb-adjacent" aria-label="Sąsiednie artykuły">
+\t\t\t\t<div><?php previous_post_link( '%link', '<span class="eyebrow">Poprzedni artykuł</span><span class="kb-adjacent-title">%title</span>' ); ?></div>
+\t\t\t\t<div><?php next_post_link( '%link', '<span class="eyebrow">Następny artykuł</span><span class="kb-adjacent-title">%title</span>' ); ?></div>
+\t\t\t</nav>
+\t\t</div>
+\t</article>
+\t<?php
+\t$omega_related_args = array( 'post__not_in' => array( get_the_ID() ), 'posts_per_page' => 3, 'ignore_sticky_posts' => true, 'no_found_rows' => true );
+\t$omega_related      = new WP_Query( $omega_related_args + array( 'category__in' => wp_list_pluck( $omega_categories, 'term_id' ) ) );
+\tif ( ! $omega_related->have_posts() ) $omega_related = new WP_Query( $omega_related_args );
+\tif ( $omega_related->have_posts() ) :
+\t?>
+\t<section class="section kb-related" aria-labelledby="kb-related-title">
+\t\t<div class="container">
+\t\t\t<div class="section-heading">
+\t\t\t\t<div>
+\t\t\t\t\t<p class="eyebrow"><span class="eyebrow-line"></span>Czytaj także</p>
+\t\t\t\t\t<h2 id="kb-related-title">Więcej z bazy wiedzy<span class="red-dot">.</span></h2>
+\t\t\t\t</div>
+\t\t\t\t<a class="text-link" href="<?php echo esc_url( omega_kb_page_url() ); ?>">Wszystkie artykuły<?php echo omega_arrow(); ?></a>
+\t\t\t</div>
+\t\t\t<div class="kb-grid">
+\t\t\t\t<?php while ( $omega_related->have_posts() ) : $omega_related->the_post(); omega_post_card(); endwhile; wp_reset_postdata(); ?>
+\t\t\t</div>
+\t\t</div>
+\t</section>
+\t<?php endif; ?>
+\t<section class="section kb-cta" aria-labelledby="kb-cta-title">
+\t\t<div class="container kb-cta-inner">
+\t\t\t<div>
+\t\t\t\t<p class="eyebrow"><span class="eyebrow-line"></span>Masz pytanie?</p>
+\t\t\t\t<h2 id="kb-cta-title">Porozmawiajmy o Twojej księgowości<span class="red-dot">.</span></h2>
+\t\t\t\t<p>Artykuły opisują zasady ogólne. Jeśli chcesz wiedzieć, jak wyglądają w Twojej firmie, umów krótką rozmowę albo policz orientacyjną cenę obsługi.</p>
+\t\t\t</div>
+\t\t\t<div class="kb-cta-actions">
+\t\t\t\t<a class="button" href="<?php echo esc_url( home_url( '/#kontakt' ) ); ?>">Umów rozmowę<?php echo omega_arrow(); ?></a>
+\t\t\t\t<a class="text-link" href="<?php echo esc_url( home_url( '/#kalkulator' ) ); ?>">Wycena online<?php echo omega_arrow(); ?></a>
+\t\t\t</div>
+\t\t</div>
+\t</section>
 </main>
 <?php get_footer(); ?>
 `;
@@ -368,7 +561,8 @@ await writeFile(join(theme, "header.php"), headerPhp);
 await writeFile(join(theme, "footer.php"), footerPhp);
 await writeFile(join(theme, "front-page.php"), `<?php get_header(); ?>\n${mainMarkup.trim()}\n<?php get_footer(); ?>\n`);
 await writeFile(join(theme, "page.php"), pagePhp);
-await writeFile(join(theme, "index.php"), pagePhp);
+await writeFile(join(theme, "index.php"), blogIndexPhp);
+await writeFile(join(theme, "single.php"), singlePhp);
 await writeFile(join(theme, "404.php"), notFoundPhp);
 await writeFile(join(theme, "woocommerce.php"), woocommercePhp);
 await writeFile(join(theme, "assets", "css", "site.css"), css
