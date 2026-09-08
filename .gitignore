@@ -22,3 +22,6 @@ dist/
 /app/public/wp-content/plugins/*
 !/app/public/wp-content/plugins/omega-core/
 !/app/public/wp-content/plugins/omega-core/**
+
+# Lokalna konfiguracja narzędzi Claude Code.
+.claude/
