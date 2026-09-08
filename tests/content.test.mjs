@@ -103,7 +103,8 @@ test('keeps the original description and canonical while correcting the page lan
   assert.ok(html.includes(`content="${source.description}"`));
   assert.ok(html.includes('rel="canonical" href="https://omega-mg.pl/"'));
   for (const href of ['#onas', '#oferta', '#opinie', '#kontakt', '#kalkulator']) {
-    assert.ok(html.includes(`href="${href}"`));
+    // Opinie stays on the homepage but was explicitly removed from navigation.
+    if (href !== '#opinie') assert.ok(html.includes(`href="${href}"`));
     assert.ok(html.includes(`id="${href.slice(1)}"`));
   }
 });

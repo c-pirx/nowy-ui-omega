@@ -1,72 +1,7 @@
 import { initCalculator } from "./calculator.js";
+import { initNavigation } from "./navigation.js";
 
-const menuButton = document.querySelector(".menu-toggle");
-const menu = document.querySelector("#mobile-navigation");
-function closeMenu(returnFocus = false) {
-  menu.hidden = true;
-  menuButton.setAttribute("aria-expanded", "false");
-  menuButton.setAttribute("aria-label", "Otwórz menu");
-  document.body.classList.remove("menu-open");
-  if (returnFocus) menuButton.focus();
-}
-menuButton.addEventListener("click", () => {
-  const open = menu.hidden;
-  menu.hidden = !open;
-  menuButton.setAttribute("aria-expanded", String(open));
-  menuButton.setAttribute("aria-label", open ? "Zamknij menu" : "Otwórz menu");
-  document.body.classList.toggle("menu-open", open);
-});
-menu.addEventListener("click", (event) => {
-  if (event.target.closest("a")) closeMenu();
-});
-document.addEventListener("keydown", (event) => {
-  if (menu.hidden) return;
-  if (event.key === "Escape") closeMenu(true);
-  if (event.key === "Tab") {
-    const links = [...menu.querySelectorAll("a")];
-    if (!event.shiftKey && document.activeElement === links.at(-1)) {
-      event.preventDefault();
-      menuButton.focus();
-    } else if (event.shiftKey && document.activeElement === menuButton) {
-      event.preventDefault();
-      links.at(-1).focus();
-    }
-  }
-});
-const desktop = matchMedia("(min-width: 1024px)");
-desktop.addEventListener("change", (event) => {
-  if (event.matches) closeMenu();
-});
-
-// Keep keyboard focus with the section reached through an anchor.
-document.querySelectorAll('a[href^="#"]').forEach((link) =>
-  link.addEventListener("click", () => {
-    const target = document.getElementById(link.hash.slice(1));
-    if (!target) return;
-    if (!target.hasAttribute("tabindex")) target.tabIndex = -1;
-    target.focus({ preventScroll: true });
-  }),
-);
-const navigationLinks = [
-  ...document.querySelectorAll(".desktop-nav a, .header-calculator"),
-];
-const sectionObserver = new IntersectionObserver(
-  (entries) => {
-    for (const entry of entries)
-      if (entry.isIntersecting) {
-        navigationLinks.forEach((link) =>
-          link.hash === "#" + entry.target.id
-            ? link.setAttribute("aria-current", "location")
-            : link.removeAttribute("aria-current"),
-        );
-      }
-  },
-  { rootMargin: "-15% 0px -65% 0px", threshold: 0 },
-);
-navigationLinks.forEach((link) => {
-  const target = document.querySelector(link.hash);
-  if (target) sectionObserver.observe(target);
-});
+initNavigation();
 
 const logos = document.getElementById("client-logos");
 const prev = document.getElementById("clients-prev");
