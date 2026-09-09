@@ -105,6 +105,35 @@ function omega_checkout_badge( $content ) {
 }
 add_filter( 'render_block_woocommerce/checkout', 'omega_checkout_badge' );
 
+// Moje konto: wprowadzenie nad logowaniem i rejestracją, kafelki na kokpicie, aktywna zakładka w zasięgu wzroku na telefonie.
+function omega_account_lead() {
+	echo '<p class="account-lead">Zaloguj się, żeby pobrać kupione materiały i sprawdzić zamówienia. Nie masz konta? Załóż je w minutę, hasło ustawisz przez link z e-maila.</p>';
+}
+add_action( 'woocommerce_before_customer_login_form', 'omega_account_lead' );
+
+function omega_account_dashboard() {
+	$user      = get_current_user_id();
+	$downloads = count( wc_get_customer_available_downloads( $user ) );
+	$orders    = wc_get_customer_order_count( $user );
+	$tiles     = array(
+		array( 'downloads', 'Pobrania', $downloads ? sprintf( 'Plików do pobrania: %d', $downloads ) : 'Kupione materiały pobierzesz tutaj.' ),
+		array( 'orders', 'Zamówienia', $orders ? sprintf( 'Złożonych zamówień: %d', $orders ) : 'Historia zakupów i płatności.' ),
+		array( 'edit-account', 'Szczegóły konta', 'Imię, adres e-mail i hasło.' ),
+	);
+	echo '<div class="account-tiles">';
+	foreach ( $tiles as $tile ) {
+		echo '<a class="account-tile" href="' . esc_url( wc_get_account_endpoint_url( $tile[0] ) ) . '"><span class="eyebrow">' . esc_html( $tile[1] ) . '</span><span class="account-tile-text">' . esc_html( $tile[2] ) . '</span>' . omega_arrow() . '</a>';
+	}
+	echo '</div>';
+}
+add_action( 'woocommerce_account_dashboard', 'omega_account_dashboard' );
+
+function omega_account_nav_scroll() {
+	if ( ! function_exists( 'is_account_page' ) || ! is_account_page() ) return;
+	echo '<script>document.querySelectorAll( ".woocommerce-MyAccount-navigation ul" ).forEach( function ( nav ) { var active = nav.querySelector( ".is-active" ); if ( active ) nav.scrollLeft = active.offsetLeft; } );</script>';
+}
+add_action( 'wp_footer', 'omega_account_nav_scroll', 100 );
+
 // Ikona koszyka w nagłówku: zawsze w sklepie, poza nim tylko gdy koszyk nie jest pusty.
 // Po najechaniu lub fokusie rozwija się mini-koszyk; na stronach koszyka i zamówienia jest zbędny.
 function omega_cart_link() {

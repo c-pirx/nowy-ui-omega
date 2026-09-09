@@ -29,6 +29,13 @@ $omega_options = array(
 	'woocommerce_enable_reviews'      => 'no',
 	'woocommerce_coming_soon'         => 'no',
 	'woocommerce_enable_guest_checkout' => 'yes',
+	// Konto klienta: rejestracja na stronie konta i w zamówieniu, żeby kupione pliki były dostępne w „Pobraniach”.
+	'woocommerce_enable_myaccount_registration'         => 'yes',
+	'woocommerce_enable_signup_and_login_from_checkout' => 'yes',
+	'woocommerce_enable_checkout_login_reminder'        => 'yes',
+	// Instalacja zapisała te teksty po angielsku; [privacy_policy] zamienia się w link po publikacji polityki.
+	'woocommerce_registration_privacy_policy_text'      => 'Twoje dane posłużą do obsługi konta i zamówień, zgodnie z [privacy_policy].',
+	'woocommerce_checkout_privacy_policy_text'          => 'Twoje dane posłużą do realizacji zamówienia i obsługi konta, zgodnie z [privacy_policy].',
 	'woocommerce_permalinks'          => array(
 		'product_base'           => '/produkt',
 		'category_base'          => 'kategoria-produktu',
