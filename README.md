@@ -70,3 +70,18 @@ Strzałki na całej stronie są ikonami SVG z kolorem `currentColor`, więc nie 
 Źródłowa treść widoku znajduje się w pliku HTML, a generator przenosi ją do szablonów PHP. Dane C.I.K. zachowują treść odczytanego widgetu; panel zawiera odnośnik do aktualnego certyfikatu.
 
 Witryna produkcyjna nie została zmodyfikowana.
+
+## Podstrona O mnie
+
+Źródło dziewięciu sekcji: `pages/o-mnie.html`. Style: `public/o-mnie.css`.
+`npm run build:wordpress` tworzy jednocześnie `public/o-mnie/index.html` oraz
+szablon `page-o-mnie.php` w motywie. Statyczne menu i stopka są generowane ze
+strony głównej, a WordPress używa wspólnych plików motywu.
+
+Podgląd statyczny: <http://localhost:4173/o-mnie/>. Założenie strony w LocalWP:
+`wp eval-file scripts/seed-about.php --path=app/public`. Skrypt nie zmienia
+treści, statusu ani metadanych istniejącej strony. Nowa strona korzysta
+z szablonu przypisanego automatycznie według slugu `o-mnie`.
+
+Treści są robocze, a fotografie biura i podróży ilustracyjne. Pochodzenie
+materiałów i sposób podmiany opisano w `research/about-assets.md`.

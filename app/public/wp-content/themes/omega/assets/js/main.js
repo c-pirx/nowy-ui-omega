@@ -13,7 +13,9 @@ if (logos && prev && next) {
   function slide(direction) {
     logos.scrollBy({
       left: (direction * logos.clientWidth) / (innerWidth < 768 ? 2 : 4),
-      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
     });
   }
   prev.addEventListener("click", () => slide(-1));
@@ -31,9 +33,13 @@ if (certificateButton && certificateHolder) {
     const open = certificateHolder.hidden;
     certificateHolder.hidden = !open;
     certificateButton.setAttribute("aria-expanded", String(open));
-    certificateButton.textContent = open ? "Ukryj certyfikat" : "Pokaż certyfikat";
+    certificateButton.textContent = open
+      ? "Ukryj certyfikat"
+      : "Pokaż certyfikat";
   });
 }
+
+
 
 // One quiet entrance per element. Content stays visible if motion is unsupported.
 function initEntranceMotion() {
@@ -93,6 +99,9 @@ function initEntranceMotion() {
   register(".kb-heading, .kb-toolbar, .kb-hero, .kb-cover, .kb-cta-inner > div");
   register(".kb-card", 55);
   register(".kb-adjacent > div, .kb-cta-actions", 65);
+  register(".om-hero-heading, .om-portrait, .om-hero-body", 45);
+  register(".om-story, .om-section-heading, .om-centered, .om-photo, .om-cta-inner");
+  register(".om-proof-grid article, .om-timeline li, .om-education-grid article, .om-specialty-grid article, .om-principles-grid article", 55);
 
   const observer = new IntersectionObserver(
     (entries) => {

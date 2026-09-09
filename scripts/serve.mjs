@@ -32,7 +32,16 @@ http
         res.end();
         return;
       }
-      if ((await stat(file)).isDirectory()) file = resolve(file, "index.html");
+      if ((await stat(file)).isDirectory()) {
+        // Relative subpage assets need the canonical directory URL, as on Pages.
+        if (!pathname.endsWith("/")) {
+          const target = new URL(req.url, "http://localhost");
+          res.writeHead(301, { Location: target.pathname + "/" + target.search });
+          res.end();
+          return;
+        }
+        file = resolve(file, "index.html");
+      }
       const data = await readFile(file);
       res.writeHead(200, {
         "Content-Type": mime[extname(file)] || "application/octet-stream",

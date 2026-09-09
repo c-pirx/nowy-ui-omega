@@ -1,6 +1,7 @@
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildAboutPage, aboutMetadata } from "./build-about.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const theme = join(root, "app", "public", "wp-content", "themes", "omega");
@@ -48,7 +49,7 @@ function rewriteMarkup(value) {
 }
 
 // Ikona koszyka WooCommerce: na końcu nawigacji desktopowej i w pasku mobilnym przed przełącznikiem menu.
-const headerMarkup = rewriteMarkup(body.slice(0, mainStart))
+const headerMarkup = rewriteMarkup(body.slice(0, mainStart).replace(/href="o-mnie"/g, `href="o-mnie" <?php if ( is_page( 'o-mnie' ) ) echo 'aria-current="page"'; ?>`))
   .replace("</nav>", "<?php omega_cart_link(); ?>\n        </nav>")
   .replace(/<button\s+class="menu-toggle"/, '<?php omega_cart_link(); ?>\n        <button class="menu-toggle"');
 let mainMarkup = body.slice(mainStart, mainEnd);
@@ -101,6 +102,10 @@ function omega_assets() {
 \t$css = get_theme_file_path( '/assets/css/site.css' );
 \t$js  = get_theme_file_path( '/assets/js/main.js' );
 \twp_enqueue_style( 'omega-site', get_theme_file_uri( '/assets/css/site.css' ), array(), (string) filemtime( $css ) );
+\tif ( is_page( 'o-mnie' ) ) {
+\t\t$about_css = get_theme_file_path( '/assets/css/o-mnie.css' );
+\t\twp_enqueue_style( 'omega-about', get_theme_file_uri( '/assets/css/o-mnie.css' ), array( 'omega-site' ), (string) filemtime( $about_css ) );
+\t}
 \twp_enqueue_script( 'omega-site', get_theme_file_uri( '/assets/js/main.js' ), array(), (string) filemtime( $js ), true );
 }
 add_action( 'wp_enqueue_scripts', 'omega_assets' );
@@ -112,6 +117,7 @@ function omega_module_script( $tag, $handle, $src ) {
 add_filter( 'script_loader_tag', 'omega_module_script', 10, 3 );
 
 function omega_document_title( $title ) {
+\tif ( is_page( 'o-mnie' ) ) return '${aboutMetadata.title}';
 \treturn is_front_page() ? 'Księgowość Jaworzno – Monika Glonek | Biuro Rachunkowe Omega MG' : $title;
 }
 add_filter( 'pre_get_document_title', 'omega_document_title' );
@@ -130,6 +136,19 @@ function omega_front_page_metadata() {
 \techo '<meta property="og:image" content="https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-scaled.jpg">' . "\\n";
 }
 add_action( 'wp_head', 'omega_front_page_metadata', 2 );
+
+function omega_about_metadata() {
+\tif ( ! is_page( 'o-mnie' ) ) return;
+\t$description = '${aboutMetadata.description}';
+\techo '<meta name="description" content="' . esc_attr( $description ) . '">' . "\\n";
+\techo '<meta property="og:title" content="${aboutMetadata.title}">' . "\\n";
+\techo '<meta property="og:description" content="' . esc_attr( $description ) . '">' . "\\n";
+\techo '<meta property="og:type" content="website">' . "\\n";
+\techo '<meta property="og:locale" content="pl_PL">' . "\\n";
+\techo '<meta property="og:url" content="' . esc_url( get_permalink() ) . '">' . "\\n";
+\techo '<meta property="og:image" content="' . esc_url( get_theme_file_uri( '/assets/dsc_1052-1536x1025.jpg' ) ) . '">' . "\\n";
+}
+add_action( 'wp_head', 'omega_about_metadata', 2 );
 
 // WooCommerce: własne style i szablon woocommerce.php zamiast domyślnych arkuszy i paska sortowania.
 add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
@@ -544,38 +563,7 @@ $omega_category   = $omega_categories ? $omega_categories[0] : null;
 
 const mainJs = app
   .replace('import { initCalculator } from "./calculator.js";\n', "")
-  .replace(/const logos = document\.getElementById\("client-logos"\);[\s\S]*?updateCarousel\(\);\n\n/, `const logos = document.getElementById("client-logos");
-const prev = document.getElementById("clients-prev");
-const next = document.getElementById("clients-next");
-if (logos && prev && next) {
-  function updateCarousel() {
-    prev.disabled = logos.scrollLeft < 4;
-    next.disabled = logos.scrollLeft + logos.clientWidth >= logos.scrollWidth - 4;
-  }
-  function slide(direction) {
-    logos.scrollBy({
-      left: (direction * logos.clientWidth) / (innerWidth < 768 ? 2 : 4),
-      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
-    });
-  }
-  prev.addEventListener("click", () => slide(-1));
-  next.addEventListener("click", () => slide(1));
-  logos.addEventListener("scroll", updateCarousel, { passive: true });
-  if (window.ResizeObserver) new ResizeObserver(updateCarousel).observe(logos);
-  updateCarousel();
-}
-
-`)
-  .replace(/const certificateButton = document\.getElementById\("load-certification"\);[\s\S]*?\}\);\n\ninitCalculator\(\);/, `const certificateButton = document.getElementById("load-certification");
-const certificateHolder = document.getElementById("certification-widget");
-if (certificateButton && certificateHolder) {
-  certificateButton.addEventListener("click", () => {
-    const open = certificateHolder.hidden;
-    certificateHolder.hidden = !open;
-    certificateButton.setAttribute("aria-expanded", String(open));
-    certificateButton.textContent = open ? "Ukryj certyfikat" : "Pokaż certyfikat";
-  });
-}`);
+  .replace(/^initCalculator\(\);$/m, "");
 
 const themeStyle = `/*
 Theme Name: Omega
@@ -664,6 +652,7 @@ await writeFile(join(theme, "assets", "css", "site.css"), css
 `);
 await writeFile(join(theme, "assets", "js", "main.js"), mainJs);
 await cp(join(root, "public", "navigation.js"), join(theme, "assets", "js", "navigation.js"));
+await buildAboutPage({ root, theme, homeHtml: html, rewriteMarkup });
 await writeFile(join(plugin, "templates", "calculator.php"), `<?php defined( 'ABSPATH' ) || exit; ?>\n${calculatorMarkup}\n`);
 await writeFile(join(plugin, "assets", "calculator.js"), `${calculator.trim()}\n\ninitCalculator();\n`);
 

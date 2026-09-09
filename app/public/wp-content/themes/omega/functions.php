@@ -13,6 +13,10 @@ function omega_assets() {
 	$css = get_theme_file_path( '/assets/css/site.css' );
 	$js  = get_theme_file_path( '/assets/js/main.js' );
 	wp_enqueue_style( 'omega-site', get_theme_file_uri( '/assets/css/site.css' ), array(), (string) filemtime( $css ) );
+	if ( is_page( 'o-mnie' ) ) {
+		$about_css = get_theme_file_path( '/assets/css/o-mnie.css' );
+		wp_enqueue_style( 'omega-about', get_theme_file_uri( '/assets/css/o-mnie.css' ), array( 'omega-site' ), (string) filemtime( $about_css ) );
+	}
 	wp_enqueue_script( 'omega-site', get_theme_file_uri( '/assets/js/main.js' ), array(), (string) filemtime( $js ), true );
 }
 add_action( 'wp_enqueue_scripts', 'omega_assets' );
@@ -24,6 +28,7 @@ function omega_module_script( $tag, $handle, $src ) {
 add_filter( 'script_loader_tag', 'omega_module_script', 10, 3 );
 
 function omega_document_title( $title ) {
+	if ( is_page( 'o-mnie' ) ) return 'O mnie – Monika Glonek | Omega MG';
 	return is_front_page() ? 'Księgowość Jaworzno – Monika Glonek | Biuro Rachunkowe Omega MG' : $title;
 }
 add_filter( 'pre_get_document_title', 'omega_document_title' );
@@ -42,6 +47,19 @@ function omega_front_page_metadata() {
 	echo '<meta property="og:image" content="https://omega-mg.pl/wp-content/uploads/2025/08/dsc_1052-scaled.jpg">' . "\n";
 }
 add_action( 'wp_head', 'omega_front_page_metadata', 2 );
+
+function omega_about_metadata() {
+	if ( ! is_page( 'o-mnie' ) ) return;
+	$description = 'Poznaj Monikę Glonek, właścicielkę Omega MG. Doświadczenie w księgowości od 2006 roku, certyfikat nr 54701/2012. Jaworzno i obsługa online.';
+	echo '<meta name="description" content="' . esc_attr( $description ) . '">' . "\n";
+	echo '<meta property="og:title" content="O mnie – Monika Glonek | Omega MG">' . "\n";
+	echo '<meta property="og:description" content="' . esc_attr( $description ) . '">' . "\n";
+	echo '<meta property="og:type" content="website">' . "\n";
+	echo '<meta property="og:locale" content="pl_PL">' . "\n";
+	echo '<meta property="og:url" content="' . esc_url( get_permalink() ) . '">' . "\n";
+	echo '<meta property="og:image" content="' . esc_url( get_theme_file_uri( '/assets/dsc_1052-1536x1025.jpg' ) ) . '">' . "\n";
+}
+add_action( 'wp_head', 'omega_about_metadata', 2 );
 
 // WooCommerce: własne style i szablon woocommerce.php zamiast domyślnych arkuszy i paska sortowania.
 add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );

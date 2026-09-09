@@ -1,5 +1,17 @@
 # Weryfikacja redesignu Omega MG
 
+## Podstrona O mnie — 9 września 2026
+
+- Zrealizowano dziewięć sekcji w statycznym podglądzie i lokalnym WordPressie, na branchu `o-mnie`.
+- `npm test`: 38/38 testów przechodzi. Nowe testy sprawdzają ścieżki pod prefiksem, komplet sekcji, wspólne menu i stopkę, bezpieczne uruchamianie skryptów bez karuzeli i kalkulatora oraz powtarzalność generatora. Po końcowym uporządkowaniu JS ponownie przeszło 5 testów podstrony i integracji WordPressa.
+- Przegląd w Chrome przy 375, 768, 1024 i 1440 px w obu wersjach: HTTP 200, dziewięć sekcji, brak poziomego przewijania, uszkodzonych obrazów i błędów JavaScript. Porównano typografię, paletę, portret i komponenty ze stroną główną.
+- Statyczną wersję sprawdzono również przez lokalny serwer pod prefiksem `/nowy-ui-omega/`, z wejściem bez końcowego ukośnika, przekierowaniem do katalogu i odświeżeniem podstrony.
+- Kliknięto wszystkie cztery kierunki CTA: kalkulator, oferta, argumenty `#dlaczego` i kontakt. Wszystkie prowadzą do istniejących sekcji strony głównej w odpowiednim środowisku.
+- Menu mobilne: otwarcie i zamknięcie klawiszem Escape. Panel certyfikatu: otwarcie i zamknięcie. CTA: białe tło i granatowy tekst po najechaniu oraz przy fokusie klawiatury; sprawdzono zwykłe animacje i `prefers-reduced-motion`.
+- Składnia PHP poprawna. Lokalna strona `o-mnie` ma ID 42; ponowne wywołanie `seed-about.php` nie zmieniło istniejącej strony. Powtórny pełny build pozostawił identyczne bajty 60 plików motywu i podstrony statycznej.
+- Treści są robocze; fotografie biura i podróży są ilustracyjne. Pochodzenie: `research/about-assets.md`. Zrzuty i wyniki przeglądu lokalnego znajdują się w niewersjonowanym `.tmp/about-qa/`.
+- Pliki HTML/CSS strony głównej i konfiguracja GitHub Pages nie zostały zmienione. Nie wykonano scalenia do `main` ani publikacji.
+
 ## Wykonane
 
 - Przegląd oryginalnej strony na komputerze, tablecie i telefonie; analiza HTML, CSS, wszystkich obrazów, odnośników i publicznego kodu kalkulatora.

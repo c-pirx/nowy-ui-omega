@@ -21,7 +21,7 @@
           <span class="brand-name">OMEGA MG<span>Biuro rachunkowe</span></span>
         </a>
         <nav class="desktop-nav" aria-label="Nawigacja główna">
-          <a class="nav-link" href="<?php echo esc_url( home_url( '/o-mnie/' ) ); ?>">O MNIE</a>
+          <a class="nav-link" href="<?php echo esc_url( home_url( '/o-mnie/' ) ); ?>" <?php if ( is_page( 'o-mnie' ) ) echo 'aria-current="page"'; ?>>O MNIE</a>
           <div class="nav-dropdown">
             <button class="nav-link nav-disclosure" type="button" aria-expanded="false" aria-controls="desktop-services">
               USŁUGI <svg class="nav-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
@@ -77,7 +77,7 @@
         aria-label="Nawigacja mobilna"
         hidden
       >
-        <a href="<?php echo esc_url( home_url( '/o-mnie/' ) ); ?>">O MNIE</a>
+        <a href="<?php echo esc_url( home_url( '/o-mnie/' ) ); ?>" <?php if ( is_page( 'o-mnie' ) ) echo 'aria-current="page"'; ?>>O MNIE</a>
         <div class="nav-dropdown">
           <button class="nav-disclosure" type="button" aria-expanded="false" aria-controls="mobile-services">
             USŁUGI <svg class="nav-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>

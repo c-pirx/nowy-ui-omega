@@ -6,35 +6,39 @@ initNavigation();
 const logos = document.getElementById("client-logos");
 const prev = document.getElementById("clients-prev");
 const next = document.getElementById("clients-next");
-function updateCarousel() {
-  prev.disabled = logos.scrollLeft < 4;
-  next.disabled = logos.scrollLeft + logos.clientWidth >= logos.scrollWidth - 4;
+if (logos && prev && next) {
+  function updateCarousel() {
+    prev.disabled = logos.scrollLeft < 4;
+    next.disabled = logos.scrollLeft + logos.clientWidth >= logos.scrollWidth - 4;
+  }
+  function slide(direction) {
+    logos.scrollBy({
+      left: (direction * logos.clientWidth) / (innerWidth < 768 ? 2 : 4),
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
+  }
+  prev.addEventListener("click", () => slide(-1));
+  next.addEventListener("click", () => slide(1));
+  logos.addEventListener("scroll", updateCarousel, { passive: true });
+  if (window.ResizeObserver) new ResizeObserver(updateCarousel).observe(logos);
+  updateCarousel();
 }
-function slide(direction) {
-  logos.scrollBy({
-    left: (direction * logos.clientWidth) / (innerWidth < 768 ? 2 : 4),
-    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? "instant"
-      : "smooth",
-  });
-}
-prev.addEventListener("click", () => slide(-1));
-next.addEventListener("click", () => slide(1));
-logos.addEventListener("scroll", updateCarousel, { passive: true });
-new ResizeObserver(updateCarousel).observe(logos);
-updateCarousel();
 
 // Original C.I.K. content in an accessible, keyboard-operated inline panel.
 const certificateButton = document.getElementById("load-certification");
-certificateButton.addEventListener("click", () => {
-  const holder = document.getElementById("certification-widget");
-  const open = holder.hidden;
-  holder.hidden = !open;
-  certificateButton.setAttribute("aria-expanded", String(open));
-  certificateButton.textContent = open
-    ? "Ukryj certyfikat"
-    : "Pokaż certyfikat";
-});
+const certificateHolder = document.getElementById("certification-widget");
+if (certificateButton && certificateHolder) {
+  certificateButton.addEventListener("click", () => {
+    const open = certificateHolder.hidden;
+    certificateHolder.hidden = !open;
+    certificateButton.setAttribute("aria-expanded", String(open));
+    certificateButton.textContent = open
+      ? "Ukryj certyfikat"
+      : "Pokaż certyfikat";
+  });
+}
 
 initCalculator();
 
@@ -96,6 +100,9 @@ function initEntranceMotion() {
   register(".kb-heading, .kb-toolbar, .kb-hero, .kb-cover, .kb-cta-inner > div");
   register(".kb-card", 55);
   register(".kb-adjacent > div, .kb-cta-actions", 65);
+  register(".om-hero-heading, .om-portrait, .om-hero-body", 45);
+  register(".om-story, .om-section-heading, .om-centered, .om-photo, .om-cta-inner");
+  register(".om-proof-grid article, .om-timeline li, .om-education-grid article, .om-specialty-grid article, .om-principles-grid article", 55);
 
   const observer = new IntersectionObserver(
     (entries) => {
